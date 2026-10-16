@@ -1,0 +1,66 @@
+/* Shown inside #root until React's first render replaces it (pure CSS: no inline styles or scripts). */
+.pp-splash {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #f5f6fb;
+  font-family: Nunito, ui-rounded, system-ui, sans-serif;
+}
+.dark .pp-splash {
+  background: #0a0e1a;
+}
+.pp-splash__inner {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  animation: pp-splash-in 0.4s ease-out 0.15s both;
+}
+.pp-splash__mark {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 12px 24px rgba(79, 70, 229, 0.35));
+  animation: pp-splash-float 2.4s ease-in-out infinite;
+}
+.pp-splash__bar {
+  width: 120px;
+  height: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(79, 70, 229, 0.15);
+}
+.pp-splash__bar::after {
+  content: '';
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+  animation: pp-splash-slide 1.1s ease-in-out infinite;
+}
+@keyframes pp-splash-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes pp-splash-float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes pp-splash-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pp-splash__inner,
+  .pp-splash__mark,
+  .pp-splash__bar::after {
+    animation: none;
+  }
+}

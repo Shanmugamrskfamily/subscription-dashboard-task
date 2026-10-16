@@ -23,9 +23,9 @@
       content="Plans, renewals, usage limits and revenue analytics in one secure dashboard. Razorpay checkout, encrypted API, live analytics."
     />
     <meta property="og:url" content="%VITE_SITE_URL%/" />
-    <meta property="og:image" content="%VITE_SITE_URL%/og-image.png" />
-    <meta property="og:image:secure_url" content="%VITE_SITE_URL%/og-image.png" />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og-image.jpg" />
+    <meta property="og:image:secure_url" content="%VITE_SITE_URL%/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta
@@ -38,7 +38,7 @@
       name="twitter:description"
       content="Plans, renewals, usage limits and revenue analytics in one secure dashboard."
     />
-    <meta name="twitter:image" content="%VITE_SITE_URL%/og-image.png" />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og-image.jpg" />
     <meta
       name="twitter:image:alt"
       content="PlanPilot logo with the tagline Subscriptions on autopilot"
@@ -69,10 +69,18 @@
     </script>
     <!-- Applies the saved theme before first paint (external file, so the CSP needs no inline scripts). -->
     <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/splash.css" />
   </head>
   <body>
     <noscript>PlanPilot needs JavaScript to run. Please enable it and reload the page.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="pp-splash" role="status" aria-label="Loading PlanPilot">
+        <div class="pp-splash__inner">
+          <img class="pp-splash__mark" src="/favicon.svg" alt="" width="64" height="64" />
+          <div class="pp-splash__bar"></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
