@@ -11,23 +11,38 @@ import { api } from '../../api/apiSlice';
 import { broadcast } from '../../lib/broadcast';
 import { sessionEnded, sessionStarted, userUpdated } from './authSlice';
 
+/**
+ * The component that fired the mutation handles its error (from `unwrap()`); the
+ * lifecycle hook only reacts to success, so a failure must not escape as an
+ * unhandled rejection.
+ */
+async function settled<T>(queryFulfilled: Promise<T>): Promise<T | null> {
+  try {
+    return await queryFulfilled;
+  } catch {
+    return null;
+  }
+}
+
 export const authApi = api.injectEndpoints({
   endpoints: (build) => ({
     login: build.mutation<AuthResponse, LoginInput>({
       query: (body) => ({ url: '/auth/login', method: 'POST', body }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        const { data } = await queryFulfilled;
+        const result = await settled(queryFulfilled);
+        if (!result) return;
         dispatch(api.util.resetApiState());
-        dispatch(sessionStarted(data));
+        dispatch(sessionStarted(result.data));
         broadcast({ type: 'signed-in' });
       },
     }),
     register: build.mutation<AuthResponse, RegisterInput>({
       query: (body) => ({ url: '/auth/register', method: 'POST', body }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        const { data } = await queryFulfilled;
+        const result = await settled(queryFulfilled);
+        if (!result) return;
         dispatch(api.util.resetApiState());
-        dispatch(sessionStarted(data));
+        dispatch(sessionStarted(result.data));
         broadcast({ type: 'signed-in' });
       },
     }),
@@ -36,7 +51,7 @@ export const authApi = api.injectEndpoints({
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         // Sign out locally even if the network call fails.
         try {
-          await queryFulfilled;
+          await settled(queryFulfilled);
         } finally {
           dispatch(sessionEnded('signed-out'));
           dispatch(api.util.resetApiState());
@@ -47,8 +62,8 @@ export const authApi = api.injectEndpoints({
     updateProfile: build.mutation<UserDto, UpdateProfileInput>({
       query: (body) => ({ url: '/me/profile', method: 'PATCH', body }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        const { data } = await queryFulfilled;
-        dispatch(userUpdated(data));
+        const result = await settled(queryFulfilled);
+        if (result) dispatch(userUpdated(result.data));
       },
     }),
     changePassword: build.mutation<{ otherSessionsRevoked: number }, ChangePasswordInput>({
@@ -67,7 +82,7 @@ export const authApi = api.injectEndpoints({
       query: () => ({ url: '/me/sessions', method: 'DELETE' }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await settled(queryFulfilled);
         } finally {
           dispatch(sessionEnded('signed-out'));
           dispatch(api.util.resetApiState());
