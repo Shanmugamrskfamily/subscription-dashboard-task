@@ -22,6 +22,7 @@ import { Button } from '../ui/button';
 import { Drawer } from '../ui/dialog';
 import { Illustration } from '../ui/feedback';
 import { ThemeToggle, UserMenu } from './controls';
+import { ShellContext } from './Page';
 
 const NAV = [
   {
@@ -153,7 +154,9 @@ export function AdminShell() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <Outlet />
+            <ShellContext.Provider value="admin">
+              <Outlet />
+            </ShellContext.Provider>
           </motion.div>
         </main>
       </div>
