@@ -264,7 +264,7 @@ export function PlanMixChart({
     );
   }
   return (
-    <div className="flex flex-col items-center gap-4 @[19rem]:flex-row @[19rem]:gap-5">
+    <div className="flex flex-col items-center gap-4 @[26rem]:flex-row @[26rem]:gap-5">
       <div className="relative size-[168px] shrink-0">
         <PieChart width={168} height={168}>
           <Pie
