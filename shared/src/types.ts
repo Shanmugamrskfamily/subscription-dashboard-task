@@ -165,6 +165,10 @@ export interface CheckoutOrder {
   planName: string;
   description: string;
   prefill: { name: string; email: string };
+  /** "razorpay" opens Razorpay Checkout (test mode); "simulated" shows the built-in test checkout. */
+  mode: 'razorpay' | 'simulated';
+  /** Simulated mode only: what a successful checkout would hand back. */
+  simulation?: { paymentId: string; signature: string };
 }
 
 export type SubscribeResponse =
