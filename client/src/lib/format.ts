@@ -1,8 +1,13 @@
-const inr = new Intl.NumberFormat('en-IN', {
+const inrWhole = new Intl.NumberFormat('en-IN', {
   style: 'currency',
   currency: 'INR',
+  maximumFractionDigits: 0,
+});
+const inrPaise = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  minimumFractionDigits: 2,
   maximumFractionDigits: 2,
-  minimumFractionDigits: 0,
 });
 const inrCompact = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -21,8 +26,9 @@ const dateTime = new Intl.DateTimeFormat('en-IN', {
 });
 const relative = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
-/** 79900 paise → "₹799"; 77907 → "₹779.07". */
-export const formatInr = (paise: number) => inr.format(paise / 100);
+/** 79900 paise → "₹799"; 77907 → "₹779.07"; 47640 → "₹476.40" (never "₹476.4"). */
+export const formatInr = (paise: number) =>
+  (paise % 100 === 0 ? inrWhole : inrPaise).format(paise / 100);
 export const formatInrCompact = (paise: number) => inrCompact.format(paise / 100);
 export const formatNumber = (value: number) => number.format(value);
 export const formatDate = (value: string | Date) => date.format(new Date(value));
