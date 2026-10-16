@@ -17,6 +17,27 @@ const WARNING_SECONDS = 60;
 const REFRESH_EARLY_MS = 60_000;
 
 /**
+ * A hint (no token data) that this browser had a session. Without it, a first visit
+ * skips the restore call instead of logging a 401 for a cookie that can't exist.
+ */
+const SESSION_HINT = 'planpilot-session';
+const hasSessionHint = () => {
+  try {
+    return localStorage.getItem(SESSION_HINT) === '1';
+  } catch {
+    return true; // Storage blocked: always try the cookie.
+  }
+};
+const setSessionHint = (on: boolean) => {
+  try {
+    if (on) localStorage.setItem(SESSION_HINT, '1');
+    else localStorage.removeItem(SESSION_HINT);
+  } catch {
+    // Storage blocked: restore simply always runs.
+  }
+};
+
+/**
  * Owns the signed-in session for the whole app:
  *  - restores it on page load from the HttpOnly refresh cookie,
  *  - refreshes the access token a minute before it expires (silent refresh),
@@ -36,18 +57,31 @@ export function SessionManager() {
   const refresh = useCallback(
     async (quiet: boolean) => {
       const result = await refreshAccessToken();
-      if (isAuthResponse(result)) dispatch(sessionStarted(result));
-      else if (result.status === 403) handleSessionError(result, dispatch);
+      if (isAuthResponse(result)) {
+        dispatch(sessionStarted(result));
+        return true;
+      }
+      if (result.status === 401 || result.status === 403) setSessionHint(false);
+      if (result.status === 403) handleSessionError(result, dispatch);
       else if (!quiet && result.status === 401) dispatch(sessionEnded('expired'));
-      return isAuthResponse(result);
+      return false;
     },
     [dispatch],
   );
 
   // 1. Restore on page load.
   useEffect(() => {
+    if (!hasSessionHint()) {
+      dispatch(restoreFinished());
+      return;
+    }
     void refresh(true).finally(() => dispatch(restoreFinished()));
   }, [refresh, dispatch]);
+
+  useEffect(() => {
+    if (status === 'authenticated') setSessionHint(true);
+    else if (status === 'anonymous' && endReason) setSessionHint(false);
+  }, [status, endReason]);
 
   // 2. Silent refresh shortly before the access token expires.
   useEffect(() => {
