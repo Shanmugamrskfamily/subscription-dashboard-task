@@ -1,0 +1,67 @@
+/** The four plans the brief asks for, priced in paise (₹299 = 29900). */
+export const PLAN_SEED = [
+  {
+    slug: 'starter',
+    name: 'Starter',
+    description: 'For freelancers getting organised.',
+    price: 29_900,
+    durationDays: 30,
+    tier: 1,
+    isPopular: false,
+    limits: { projects: 3, teamMembers: 2 },
+    features: ['3 projects', '2 team members', '5 GB storage', 'Basic reports', 'Email support'],
+  },
+  {
+    slug: 'pro',
+    name: 'Pro',
+    description: 'For growing teams that ship every week.',
+    price: 79_900,
+    durationDays: 30,
+    tier: 2,
+    isPopular: true,
+    limits: { projects: 25, teamMembers: 10 },
+    features: [
+      '25 projects',
+      '10 team members',
+      '50 GB storage',
+      'Analytics dashboard',
+      'Priority support',
+    ],
+  },
+  {
+    slug: 'business',
+    name: 'Business',
+    description: 'For companies that need control and scale.',
+    price: 1_99_900,
+    durationDays: 30,
+    tier: 3,
+    isPopular: false,
+    limits: { projects: null, teamMembers: 50 },
+    features: [
+      'Unlimited projects',
+      '50 team members',
+      '500 GB storage',
+      'SSO and audit log',
+      'API access',
+    ],
+  },
+  {
+    slug: 'pro-annual',
+    name: 'Pro Annual',
+    description: 'Everything in Pro, billed yearly. Two months free.',
+    price: 7_99_900,
+    durationDays: 365,
+    tier: 2,
+    isPopular: false,
+    limits: { projects: 25, teamMembers: 10 },
+    features: [
+      'Everything in Pro',
+      '25 projects',
+      '10 team members',
+      'Save about 17% vs monthly',
+      'Priority support',
+    ],
+  },
+] as const;
+
+export type PlanSlug = (typeof PLAN_SEED)[number]['slug'];
