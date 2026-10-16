@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>PlanPilot brand assets</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Nunito, system-ui, sans-serif;
+        background: transparent;
+      }
+      .view {
+        display: none;
+      }
+      .view.on {
+        display: block;
+      }
+      /* Full-bleed square for maskable and Apple icons (the OS rounds the corners). */
+      .bleed {
+        width: 512px;
+        height: 512px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        display: grid;
+        place-items: center;
+      }
+      .og {
+        width: 1200px;
+        height: 630px;
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+        background:
+          radial-gradient(900px 520px at 85% 30%, rgba(124, 58, 237, 0.55), transparent 60%),
+          radial-gradient(700px 500px at 10% 100%, rgba(56, 189, 248, 0.28), transparent 60%),
+          linear-gradient(135deg, #1e1b4b 0%, #312e81 45%, #4c1d95 100%);
+      }
+      .og .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: linear-gradient(90deg, #000 0%, transparent 75%);
+      }
+      .og .left {
+        position: absolute;
+        left: 72px;
+        top: 64px;
+        width: 640px;
+      }
+      .lockup {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .word {
+        font-weight: 900;
+        font-size: 46px;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .word b {
+        background: linear-gradient(135deg, #c7d2fe, #e9d5ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .og h1 {
+        font-size: 64px;
+        font-weight: 900;
+        letter-spacing: -0.035em;
+        line-height: 1.04;
+        margin-top: 54px;
+      }
+      .og h1 span {
+        background: linear-gradient(90deg, #fde68a, #f59e0b);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .og p {
+        font-size: 24px;
+        font-weight: 600;
+        opacity: 0.86;
+        margin-top: 18px;
+        line-height: 1.4;
+        max-width: 560px;
+      }
+      .chips {
+        display: flex;
+        gap: 10px;
+        margin-top: 34px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        padding: 9px 16px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        font-weight: 800;
+        font-size: 17px;
+      }
+      .ill {
+        position: absolute;
+        filter: drop-shadow(0 24px 34px rgba(10, 6, 40, 0.45));
+      }
+      .kpi {
+        position: absolute;
+        right: 78px;
+        top: 72px;
+        width: 300px;
+        padding: 22px 24px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #0f172a;
+        box-shadow: 0 30px 60px rgba(10, 6, 40, 0.35);
+      }
+      .kpi small {
+        font-size: 15px;
+        font-weight: 800;
+        color: #5b6476;
+      }
+      .kpi .v {
+        font-size: 40px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        margin-top: 2px;
+      }
+      .kpi .d {
+        display: inline-block;
+        margin-top: 6px;
+        font-size: 14px;
+        font-weight: 900;
+        color: #15803d;
+        background: #dcfce7;
+        border-radius: 999px;
+        padding: 3px 10px;
+      }
+      .url {
+        position: absolute;
+        left: 72px;
+        bottom: 44px;
+        font-size: 18px;
+        font-weight: 800;
+        opacity: 0.7;
+        letter-spacing: 0.02em;
+      }
+    </style>
+  </head>
+  <body>
+    <template id="mark">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <defs>
+          <linearGradient id="g" x1="6" y1="4" x2="58" y2="60" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#4F46E5" />
+            <stop offset="1" stop-color="#7C3AED" />
+          </linearGradient>
+        </defs>
+        <rect class="tile" width="64" height="64" rx="16" fill="url(#g)" />
+        <rect x="12" y="41" width="7.5" height="11" rx="2.6" fill="#fff" fill-opacity=".5" />
+        <rect x="22.5" y="35" width="7.5" height="17" rx="2.6" fill="#fff" fill-opacity=".72" />
+        <rect x="33" y="29" width="7.5" height="23" rx="2.6" fill="#fff" />
+        <path d="M53.5 9.5 31.5 19.2l8.6 3.4 3.5 8.9z" fill="#fff" />
+        <path d="m53.5 9.5-13.4 13.1 1.5 4.6z" fill="#C7D2FE" />
+        <circle cx="26" cy="24.5" r="1.7" fill="#FCD34D" />
+        <circle cx="20.5" cy="28.5" r="1.3" fill="#FCD34D" fill-opacity=".7" />
+      </svg>
+    </template>
+
+    <section class="view" id="icon">
+      <div data-mark style="width: 512px; height: 512px"></div>
+    </section>
+    <section class="view" id="bleed">
+      <div class="bleed"><div data-mark data-bare style="width: 400px; height: 400px"></div></div>
+    </section>
+
+    <section class="view" id="og">
+      <div class="og">
+        <div class="grid"></div>
+        <div class="left">
+          <div class="lockup">
+            <span data-mark style="width: 60px; height: 60px; display: inline-block"></span>
+            <span class="word">Plan<b>Pilot</b></span>
+          </div>
+          <h1>Subscriptions on <span>autopilot.</span></h1>
+          <p>Plans, renewals, usage limits and revenue analytics in one secure dashboard.</p>
+          <div class="chips">
+            <span class="chip">Razorpay checkout</span><span class="chip">Encrypted API</span
+            ><span class="chip">Live analytics</span>
+          </div>
+        </div>
+        <div class="kpi">
+          <small>Monthly recurring revenue</small>
+          <div class="v">₹1,84,350</div>
+          <span class="d">▲ 12.4% this month</span>
+        </div>
+        <img
+          class="ill"
+          src="../../client/src/assets/illustrations/rocket.webp"
+          alt=""
+          style="right: 250px; top: 250px; width: 210px"
+        />
+        <img
+          class="ill"
+          src="../../client/src/assets/illustrations/coins-growth.webp"
+          alt=""
+          style="right: 52px; top: 262px; width: 200px"
+        />
+        <img
+          class="ill"
+          src="../../client/src/assets/illustrations/payment-success.webp"
+          alt=""
+          style="right: 126px; top: 420px; width: 150px"
+        />
+        <img
+          class="ill"
+          src="../../client/src/assets/illustrations/renewal-calendar.webp"
+          alt=""
+          style="right: 330px; top: 440px; width: 140px"
+        />
+        <div class="url">PlanPilot · subscription management dashboard</div>
+      </div>
+    </section>
+
+    <script>
+      const tpl = document.getElementById('mark').innerHTML;
+      document.querySelectorAll('[data-mark]').forEach((el, i) => {
+        el.innerHTML = tpl.replaceAll('id="g"', `id="g${i}"`).replaceAll('url(#g)', `url(#g${i})`);
+        const svg = el.firstElementChild;
+        svg.setAttribute('width', '100%');
+        svg.setAttribute('height', '100%');
+        // Maskable icons already sit on the gradient, so the inner tile is dropped.
+        if (el.hasAttribute('data-bare')) svg.querySelector('.tile').remove();
+      });
+      document
+        .getElementById(new URLSearchParams(location.search).get('view') || 'icon')
+        .classList.add('on');
+    </script>
+  </body>
+</html>

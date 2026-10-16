@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>PlanPilot · Subscription management dashboard</title>
+    <meta
+      name="description"
+      content="PlanPilot is a subscription management dashboard: pick a plan, pay with Razorpay, track renewals and usage limits, and see revenue analytics in one secure place."
+    />
+    <link rel="canonical" href="%VITE_SITE_URL%/" />
+    <meta name="theme-color" content="#F5F6FB" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0A0E1A" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Link previews (WhatsApp, LinkedIn, X, Slack): crawlers read this static HTML only. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PlanPilot" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content="PlanPilot · Subscriptions on autopilot" />
+    <meta
+      property="og:description"
+      content="Plans, renewals, usage limits and revenue analytics in one secure dashboard. Razorpay checkout, encrypted API, live analytics."
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%/" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og-image.jpg" />
+    <meta property="og:image:secure_url" content="%VITE_SITE_URL%/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="PlanPilot logo with the tagline Subscriptions on autopilot"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PlanPilot · Subscriptions on autopilot" />
+    <meta
+      name="twitter:description"
+      content="Plans, renewals, usage limits and revenue analytics in one secure dashboard."
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og-image.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="PlanPilot logo with the tagline Subscriptions on autopilot"
+    />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Structured data is a non-executing data block, so the strict CSP doesn't need to allow it. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "PlanPilot",
+        "url": "%VITE_SITE_URL%/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "description": "Subscription management dashboard with plans, renewals, usage limits and revenue analytics.",
+        "offers": [
+          { "@type": "Offer", "name": "Starter", "price": "299", "priceCurrency": "INR" },
+          { "@type": "Offer", "name": "Pro", "price": "799", "priceCurrency": "INR" },
+          { "@type": "Offer", "name": "Business", "price": "1999", "priceCurrency": "INR" },
+          { "@type": "Offer", "name": "Pro Annual", "price": "7999", "priceCurrency": "INR" }
+        ]
+      }
+    </script>
+    <!-- Applies the saved theme before first paint (external file, so the CSP needs no inline scripts). -->
+    <script src="/theme-init.js"></script>
+    <link rel="stylesheet" href="/splash.css" />
+  </head>
+  <body>
+    <noscript>PlanPilot needs JavaScript to run. Please enable it and reload the page.</noscript>
+    <div id="root">
+      <div class="pp-splash" role="status" aria-label="Loading PlanPilot">
+        <div class="pp-splash__inner">
+          <img class="pp-splash__mark" src="/favicon.svg" alt="" width="64" height="64" />
+          <div class="pp-splash__bar"></div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+# Render's free plan sleeps after 15 idle minutes; a light ping during Indian daytime keeps
+# the demo responsive for reviewers. Set the repository variable API_HEALTH_URL to enable it.
+name: Keep API warm
+
+on:
+  schedule:
+    - cron: '*/14 2-17 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    if: ${{ vars.API_HEALTH_URL != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping the health endpoint
+        run: curl --fail --silent --show-error --max-time 90 --retry 2 "$API_HEALTH_URL"
+        env:
+          API_HEALTH_URL: ${{ vars.API_HEALTH_URL }}

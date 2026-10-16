@@ -97,6 +97,8 @@ export function encryptedPayloads(options: EncryptionOptions): RequestHandler {
       seal(key, body, responseAad(nonce, res.statusCode))
         .then((envelope) => {
           res.setHeader(ENC_HEADERS.response, '1');
+          // A sealed response only opens for the request that asked for it, so it must never be cached.
+          res.setHeader('Cache-Control', 'no-store');
           sendJson(envelope);
         })
         .catch(next);

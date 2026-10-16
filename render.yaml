@@ -1,0 +1,47 @@
+# Render Blueprint for the PlanPilot API. Secrets are marked `sync: false`:
+# Render asks for them when the Blueprint is created, and they never live in git.
+services:
+  - type: web
+    name: planpilot-api
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    # Dev dependencies are needed to bundle the server (tsup), so they are installed explicitly.
+    buildCommand: npm ci --include=dev && npm run build -w server
+    startCommand: npm run start -w server
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: '24'
+      - key: LOG_LEVEL
+        value: info
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: PAYLOAD_PRIVATE_KEY
+        sync: false
+      - key: PAYLOAD_PUBLIC_KEY
+        sync: false
+      - key: PAYLOAD_KID
+        value: k1
+      - key: ENCRYPTION_REQUIRED
+        value: 'true'
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      # The Vercel site URL, e.g. https://planpilot.vercel.app
+      - key: CLIENT_ORIGINS
+        sync: false
+      # Render's proxy plus the Vercel rewrite in front of it.
+      - key: TRUST_PROXY
+        value: '2'
+      - key: SEED_ON_BOOT
+        value: 'true'
+      - key: DEMO_MODE
+        value: 'true'

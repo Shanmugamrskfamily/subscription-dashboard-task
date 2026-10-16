@@ -48,6 +48,10 @@ export default defineConfig([
     rules: { 'no-console': 'off' },
   },
   {
+    files: ['client/public/**/*.js'],
+    languageOptions: { globals: globals.browser },
+  },
+  {
     files: ['client/**/*.{ts,tsx}'],
     languageOptions: { globals: globals.browser },
     extends: [reactHooks.configs.flat['recommended-latest']],

@@ -43,8 +43,8 @@ async function call({
   nonce = newNonce(),
   ts = String(Date.now()),
 }: Call) {
-  let req = request(app)
-    [method](path)
+  const agent = request(app);
+  let req = (method === 'get' ? agent.get(path) : agent.post(path))
     .set(ENC_HEADERS.session, session.publicKey)
     .set(ENC_HEADERS.kid, 'k1')
     .set(ENC_HEADERS.ts, ts)
@@ -171,6 +171,8 @@ describe('encrypted API (encryption required)', () => {
   it('binds each response to its own request', async () => {
     const { res, nonce } = await call({ method: 'get', path: '/api/plans' });
     expect(res.status).toBe(200);
+    // Never cached: a stored copy could not be opened by any later request.
+    expect(res.headers['cache-control']).toBe('no-store');
     await expect(
       open(session.key, res.body, responseAad(`${nonce.slice(0, -4)}AAA=`, 200)),
     ).rejects.toThrow();

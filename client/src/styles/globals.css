@@ -1,0 +1,274 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@fontsource-variable/nunito';
+
+/* Class-based dark mode, set before first paint by public/theme-init.js. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Bento SaaS tokens (text colours meet 4.5:1 on their surfaces) ---------- */
+:root {
+  --bg: #f5f6fb;
+  --surface: #ffffff;
+  --surface-2: #f1f3f9;
+  --surface-3: #e8ebf4;
+  --line: #e3e7f1;
+  --line-strong: #cfd6e6;
+  --ink: #0f172a;
+  --muted: #535c6e;
+  --subtle: #7b8496;
+
+  --brand: #4f46e5;
+  --brand-strong: #4338ca;
+  --brand-soft: #eef0ff;
+  --brand-ink: #3730a3;
+  --violet: #7c3aed;
+  --sky: #0284c7;
+  --amber: #d97706;
+
+  --success: #16a34a;
+  --success-soft: #dcfce7;
+  --success-ink: #166534;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+  --danger-ink: #991b1b;
+  --warning: #d97706;
+  --warning-soft: #fef3c7;
+  --warning-ink: #92400e;
+  --info-soft: #e0f2fe;
+  --info-ink: #075985;
+
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.05), 0 6px 20px rgb(15 23 42 / 0.05);
+  --shadow-pop: 0 2px 4px rgb(15 23 42 / 0.06), 0 16px 36px rgb(79 70 229 / 0.14);
+  --shadow-brand: 0 8px 20px rgb(79 70 229 / 0.35);
+
+  --chart-1: #4f46e5;
+  --chart-2: #38bdf8;
+  --chart-3: #7c3aed;
+  --chart-4: #f59e0b;
+  --chart-5: #10b981;
+  --chart-grid: rgb(15 23 42 / 0.08);
+  --gradient-brand: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+.dark {
+  --bg: #0a0e1a;
+  --surface: #111729;
+  --surface-2: #182036;
+  --surface-3: #1f2944;
+  --line: #222b45;
+  --line-strong: #33405f;
+  --ink: #e7eaf3;
+  --muted: #a0a9be;
+  --subtle: #7a849b;
+
+  --brand: #6366f1;
+  --brand-strong: #818cf8;
+  --brand-soft: #1e2346;
+  --brand-ink: #c7cbff;
+  --violet: #a78bfa;
+  --sky: #7dd3fc;
+  --amber: #fcd34d;
+
+  --success: #22c55e;
+  --success-soft: rgb(34 197 94 / 0.15);
+  --success-ink: #86efac;
+  --danger: #ef4444;
+  --danger-soft: rgb(239 68 68 / 0.15);
+  --danger-ink: #fca5a5;
+  --warning: #f59e0b;
+  --warning-soft: rgb(245 158 11 / 0.15);
+  --warning-ink: #fcd34d;
+  --info-soft: rgb(56 189 248 / 0.15);
+  --info-ink: #7dd3fc;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35), 0 8px 24px rgb(0 0 0 / 0.25);
+  --shadow-pop: 0 2px 4px rgb(0 0 0 / 0.4), 0 16px 36px rgb(99 102 241 / 0.22);
+  --shadow-brand: 0 8px 24px rgb(99 102 241 / 0.35);
+
+  --chart-1: #818cf8;
+  --chart-2: #38bdf8;
+  --chart-3: #a78bfa;
+  --chart-4: #fbbf24;
+  --chart-5: #34d399;
+  --chart-grid: rgb(231 234 243 / 0.08);
+  --gradient-brand: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+@theme inline {
+  --font-sans: 'Nunito Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+  --color-violet: var(--violet);
+  --color-sky: var(--sky);
+  --color-amber: var(--amber);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-ink: var(--success-ink);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-ink: var(--danger-ink);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-ink: var(--warning-ink);
+  --color-info-soft: var(--info-soft);
+  --color-info-ink: var(--info-ink);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+  --shadow-brand: var(--shadow-brand);
+  --radius-card: 1rem;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+  --animate-live: live 1.8s ease-out infinite;
+  --animate-shake: shake 0.4s ease-in-out;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+@keyframes live {
+  0% {
+    box-shadow: 0 0 0 0 rgb(34 197 94 / 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgb(34 197 94 / 0);
+  }
+}
+@keyframes bars {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.55);
+  }
+}
+@keyframes plane {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(2px, -3px);
+  }
+}
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100dvh;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--brand) 22%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+  button,
+  [role='button'],
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  input,
+  select,
+  textarea {
+    /* 16px stops iOS zooming into fields on focus. */
+    font-size: 16px;
+  }
+  @media (min-width: 640px) {
+    input,
+    select,
+    textarea {
+      font-size: 15px;
+    }
+  }
+}
+
+@layer utilities {
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+  .bg-brand-gradient {
+    background-image: var(--gradient-brand);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--surface-2) 0%,
+      var(--surface-3) 50%,
+      var(--surface-2) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  .safe-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
