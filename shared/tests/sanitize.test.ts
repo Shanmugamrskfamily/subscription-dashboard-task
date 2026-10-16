@@ -21,9 +21,12 @@ describe('sanitizeText', () => {
 });
 
 describe('isUnsafeKey', () => {
-  it.each(['$gt', '$where', 'a.b', '__proto__', 'constructor', 'prototype'])('flags %s', (key) => {
-    expect(isUnsafeKey(key)).toBe(true);
-  });
+  it.each(['$gt', '$where', 'status[$ne]', 'a.b', '__proto__', 'constructor', 'prototype'])(
+    'flags %s',
+    (key) => {
+      expect(isUnsafeKey(key)).toBe(true);
+    },
+  );
 
   it('allows normal keys', () => {
     expect(isUnsafeKey('email')).toBe(false);

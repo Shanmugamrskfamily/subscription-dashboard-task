@@ -21,10 +21,10 @@ export function sanitizeText(value: string): string {
     .trim();
 }
 
-/** Keys MongoDB treats as operators or paths. User input must never carry them. */
+/** Keys MongoDB treats as operators or paths (also bracket forms like `a[$ne]`). User input never needs them. */
 export function isUnsafeKey(key: string): boolean {
   return (
-    key.startsWith('$') ||
+    key.includes('$') ||
     key.includes('.') ||
     key === '__proto__' ||
     key === 'constructor' ||
