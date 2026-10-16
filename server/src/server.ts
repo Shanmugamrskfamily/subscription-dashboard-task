@@ -16,12 +16,19 @@ try {
 const { createApp } = await import('./app');
 const { connectDatabase } = await import('./config/db');
 const { startLifecycleJobs } = await import('./jobs/subscription-lifecycle');
+const { startDemoRefresh } = await import('./jobs/demo-refresh');
 const { ensureSeedData } = await import('./seed/seed');
 const { logger } = await import('./utils/logger');
 
 const closeDatabase = await connectDatabase(config);
 if (config.seedOnBoot) await ensureSeedData();
-const stopJobs = startLifecycleJobs();
+const stopLifecycle = startLifecycleJobs();
+// A public demo keeps its story current: rebuilt nightly once it is a day old.
+const stopDemoRefresh = config.demoMode ? startDemoRefresh() : () => undefined;
+const stopJobs = () => {
+  stopLifecycle();
+  stopDemoRefresh();
+};
 
 const server = createApp({ config }).listen(config.port, () => {
   logger.info(
