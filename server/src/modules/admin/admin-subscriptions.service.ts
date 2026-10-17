@@ -32,7 +32,11 @@ function sortSpec(sort: string): Record<string, 1 | -1> {
   return { [field]: sort.startsWith('-') ? -1 : 1, _id: -1 };
 }
 
-const endOfDay = (date: Date) => new Date(new Date(date).setHours(23, 59, 59, 999));
+const IST_OFFSET_MS = 330 * 60_000;
+/** Date filters cover whole days in India time, the same days the analytics use. */
+const startOfIstDay = (date: Date) =>
+  new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()) - IST_OFFSET_MS);
+const endOfIstDay = (date: Date) => new Date(startOfIstDay(date).getTime() + DAY_MS - 1);
 
 async function buildFilter(query: AdminSubscriptionQuery) {
   const filter: Record<string, unknown> = {};
@@ -41,8 +45,8 @@ async function buildFilter(query: AdminSubscriptionQuery) {
   if (query.changeType !== 'all') filter.changeType = query.changeType;
   if (query.from || query.to) {
     filter.startDate = {
-      ...(query.from ? { $gte: query.from } : {}),
-      ...(query.to ? { $lte: endOfDay(query.to) } : {}),
+      ...(query.from ? { $gte: startOfIstDay(query.from) } : {}),
+      ...(query.to ? { $lte: endOfIstDay(query.to) } : {}),
     };
   }
   if (query.search) {
