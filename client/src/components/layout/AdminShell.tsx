@@ -15,6 +15,8 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router';
 import { toast } from 'sonner';
 import { errorOf } from '../../api/errors';
 import { useResetDemoMutation } from '../../features/admin/adminApi';
+import { ConfirmDialog } from '../../features/admin/components/dialogs';
+import { useLogoutMutation } from '../../features/auth/authApi';
 import { NotificationBell } from '../../features/notifications/NotificationBell';
 import { cn } from '../../lib/cn';
 import { Logo } from '../brand/logo';
@@ -46,6 +48,21 @@ const NAV = [
 
 function SideNav({ onNavigate }: { onNavigate?: () => void }) {
   const [reset, { isLoading }] = useResetDemoMutation();
+  const [logout] = useLogoutMutation();
+  const [confirming, setConfirming] = useState(false);
+
+  // A reset rebuilds every demo account (this admin included), so every session ends.
+  const resetDemo = async () => {
+    try {
+      await reset().unwrap();
+      setConfirming(false);
+      toast.success('Demo data is fresh again. Sign in with any demo account.');
+      await logout();
+    } catch (e) {
+      toast.error(errorOf(e)?.message ?? 'Could not reset the demo data.');
+    }
+  };
+
   return (
     <div className="flex h-full flex-col gap-6">
       <nav aria-label="Admin" className="space-y-5">
@@ -90,19 +107,21 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
           variant="secondary"
           size="sm"
           className="mt-3 w-full"
-          loading={isLoading}
-          onClick={async () => {
-            try {
-              await reset().unwrap();
-              toast.success('Demo data reset to a fresh state.');
-            } catch (e) {
-              toast.error(errorOf(e)?.message ?? 'Could not reset the demo data.');
-            }
-          }}
+          onClick={() => setConfirming(true)}
         >
           <RotateCcw /> Reset demo data
         </Button>
       </div>
+      <ConfirmDialog
+        open={confirming}
+        onOpenChange={setConfirming}
+        title="Reset the demo data?"
+        description="Every sample customer, plan history, payment and notification is rebuilt from scratch, so each demo account is back in the state its sign-in card describes. Everyone is signed out, including you."
+        confirmLabel="Reset and sign out"
+        danger
+        loading={isLoading}
+        onConfirm={() => void resetDemo()}
+      />
     </div>
   );
 }
