@@ -60,6 +60,8 @@ export async function openRazorpay(order: CheckoutOrder): Promise<RazorpayOutcom
       currency: order.currency,
       name: 'PlanPilot',
       description: order.description,
+      // Shown at the top of Checkout; Razorpay loads it from our public URL.
+      image: new URL('/icon-512.png', window.location.origin).href,
       prefill: order.prefill,
       theme: { color: '#4F46E5' },
       handler: (response: RazorpaySuccess) => resolve({ kind: 'paid', response }),

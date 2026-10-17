@@ -49,7 +49,7 @@ A full-stack subscription management dashboard. Customers pick a plan, pay throu
 
 1. Open the <!-- LIVE_URL -->[live demo](https://planpilot-dashboard.vercel.app).
 2. On the sign-in page, click any demo account card. One click fills in the form and signs you in.
-3. When a plan needs paying for, Razorpay opens in **test mode**: use the UPI ID `success@razorpay` (or `failure@razorpay` to see the failure path), or a test card from [Razorpay's test card list](https://razorpay.com/docs/payments/payments/test-card-details/). No real money moves.
+3. When a plan needs paying for, Razorpay Checkout opens in **test mode**: choose **Netbanking**, pick any bank and tap **Success** (or **Failure** to see the failure path), or use a card from [Razorpay's test card list](https://razorpay.com/docs/payments/payments/test-card-details/). No real money moves.
 
 > [!NOTE]
 > The API runs on Render's free tier, which sleeps after 15 idle minutes. The first request after a nap can take about 50 seconds; the app shows a "Waking up the server…" banner while it starts.
