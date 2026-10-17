@@ -3,6 +3,9 @@ import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import { openApiDocument } from './openapi';
 
+/** Where app.ts mounts this router. */
+const DOCS_BASE = '/api';
+
 export const docsRouter = Router();
 
 docsRouter.get('/openapi.json', (_req, res) => {
@@ -26,8 +29,17 @@ docsRouter.use(
     },
   }),
   swaggerUi.serve,
-  swaggerUi.setup(openApiDocument, {
+  // The page loads the document from /api/openapi.json rather than having it inlined:
+  // swagger-ui-express inlines with String.replace, which mangles text containing "$`"
+  // or "$'". A fixed URL also means a ?url= query can't point the page at another spec.
+  swaggerUi.setup(null, {
     customSiteTitle: 'PlanPilot API',
-    swaggerOptions: { persistAuthorization: true, displayRequestDuration: true },
+    swaggerUrl: `${DOCS_BASE}/openapi.json`,
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      showExtensions: true,
+      filter: true,
+    },
   }),
 );
