@@ -2,7 +2,12 @@ import { createBrowserRouter, Outlet } from 'react-router';
 import { Toaster } from 'sonner';
 import { AdminShell } from '../components/layout/AdminShell';
 import { AppShell } from '../components/layout/AppShell';
-import { OfflineBanner, RouteProgress, ServerWakeBanner } from '../components/feedback/status';
+import {
+  BrandLoader,
+  OfflineBanner,
+  RouteProgress,
+  ServerWakeBanner,
+} from '../components/feedback/status';
 import { SessionManager } from '../features/auth/SessionManager';
 import { CheckoutProvider } from '../features/billing/CheckoutFlow';
 import { useTheme } from '../features/theme/theme';
@@ -40,6 +45,8 @@ export const router = createBrowserRouter([
   {
     element: <Root />,
     errorElement: <RouteErrorPage />,
+    // Shown while the first lazy page loads (the CSS splash covers the very first paint).
+    hydrateFallbackElement: <BrandLoader />,
     children: [
       { index: true, element: <HomeRedirect /> },
       {

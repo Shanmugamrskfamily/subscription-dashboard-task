@@ -3,7 +3,7 @@ import type { RegisterFormValues } from '@planpilot/shared';
 import { Form, Formik } from 'formik';
 import type { FormikHelpers } from 'formik';
 import { ArrowRight, Lock, Mail, UserRound } from 'lucide-react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { errorOf } from '../../api/errors';
 import { Button } from '../../components/ui/button';
@@ -15,12 +15,14 @@ import {
   TextField,
 } from '../../components/ui/form';
 import { useRegisterMutation } from './authApi';
+import { safeNext } from '../../lib/navigation';
 import { AuthLayout } from './AuthLayout';
 
 const INITIAL: RegisterFormValues = { name: '', email: '', password: '', confirmPassword: '' };
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
   const [register] = useRegisterMutation();
 
   const onSubmit = async (
@@ -31,11 +33,14 @@ export default function RegisterPage() {
     try {
       // Cast applies the same cleaning the server does (trim, strip tags, lower-case email).
       const { name, email, password } = registerSchema.cast(values, { stripUnknown: true });
+      // New accounts start on the plans page; the guest guard follows ?next= as soon as
+      // the session starts, so set it before signing up.
+      if (!params.get('next')) setParams({ next: '/plans' }, { replace: true });
       const session = await register({ name, email, password }).unwrap();
       toast.success(
         `Welcome aboard, ${session.user.name.split(' ')[0]}! Pick a plan to unlock your workspace.`,
       );
-      navigate('/plans', { replace: true });
+      navigate(safeNext(params.get('next')) ?? '/plans', { replace: true });
     } catch (e) {
       const error = errorOf(e);
       if (error) applyServerErrors(error, helpers);

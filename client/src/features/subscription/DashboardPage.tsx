@@ -167,25 +167,27 @@ function PlanCard({ mine }: { mine: MySubscriptionDto }) {
       <CardHeader title="Current plan" action={<StatusBadge status="active" />} />
       <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
         <DaysRing daysLeft={sub.daysLeft} totalDays={sub.totalDays} />
-        <dl className="w-full space-y-2 text-sm">
+        <div className="w-full space-y-2 text-sm">
           <div className="flex flex-wrap items-center gap-2">
             <PlanPill slug={sub.plan.slug} name={sub.plan.name} />
             <span className="num font-black">{formatInr(sub.plan.price)}</span>
             <span className="text-muted">/ {sub.plan.durationDays} days</span>
           </div>
-          <div className="flex justify-between gap-3">
-            <dt className="text-muted">Started</dt>
-            <dd className="font-extrabold">{formatDate(sub.startDate)}</dd>
-          </div>
-          <div className="flex justify-between gap-3">
-            <dt className="text-muted">Ends</dt>
-            <dd className="font-extrabold">{formatDate(sub.endDate)}</dd>
-          </div>
-          <div className="flex justify-between gap-3">
-            <dt className="text-muted">How it started</dt>
-            <dd className="font-extrabold">{CHANGE_LABEL[sub.changeType]}</dd>
-          </div>
-        </dl>
+          <dl className="space-y-2">
+            <div className="flex justify-between gap-3">
+              <dt className="text-muted">Started</dt>
+              <dd className="font-extrabold">{formatDate(sub.startDate)}</dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-muted">Ends</dt>
+              <dd className="font-extrabold">{formatDate(sub.endDate)}</dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-muted">How it started</dt>
+              <dd className="font-extrabold">{CHANGE_LABEL[sub.changeType]}</dd>
+            </div>
+          </dl>
+        </div>
       </div>
       <div className="mt-5 flex gap-2">
         <Button variant="outline" size="sm" className="flex-1" onClick={() => navigate('/plans')}>

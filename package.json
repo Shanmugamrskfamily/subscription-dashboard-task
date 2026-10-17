@@ -26,6 +26,8 @@
     "seed": "npm run seed -w server",
     "gen:keys": "node scripts/gen-keys.mjs",
     "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "capture": "node scripts/capture-media.mjs",
     "prepare": "husky"
   },
   "devDependencies": {
