@@ -28,7 +28,7 @@ A full-stack subscription management dashboard. Customers pick a plan, pay throu
   &nbsp;·&nbsp;
   <!-- LIVE_URL --><a href="https://planpilot-api-0i0d.onrender.com/api/docs"><b>API docs</b></a>
   &nbsp;·&nbsp;
-  <!-- DEMO_VIDEO_URL --><a href="#see-it-in-action"><b>Demo video</b></a>
+  <a href="#see-it-in-action"><b>Demo GIF</b></a>
 </p>
 
 <sub>Built by <b>Shanmugam R</b> as the technical assessment for the Full Stack Web Developer role at Gnxtace Technologies.</sub>
@@ -167,7 +167,7 @@ Every item in the brief, and where to find it.
 - **Accessibility.** Skip-to-content links, visible labels with field-level errors, keyboard-friendly menus and dialogs built on Radix primitives, 44 px touch targets on phones, reduced-motion support, and axe scans in light and dark in the E2E suite.
 - **SEO and link previews.** Static Open Graph and Twitter tags with a 1200 × 630 share image, JSON-LD for the app and its four INR plans, per-page titles, `robots.txt` and `sitemap.xml` written at build time, and a web manifest with icons. The logo, icons and share image are rendered from one HTML source by [generate-brand-assets.mjs](scripts/generate-brand-assets.mjs).
 - **CSP and security headers** on both the web app and the API. [Details](#security)
-- **Tests and CI.** 211 unit and integration tests with coverage gates, Playwright end-to-end tests with axe, Git hooks and a GitHub Actions pipeline. [Details](#testing)
+- **Tests and CI.** 228 unit and integration tests with coverage gates, 58 Playwright end-to-end tests with axe, Git hooks and a GitHub Actions pipeline. [Details](#testing)
 
 ## Architecture
 
@@ -474,12 +474,12 @@ Run from the repository root.
 
 ## Testing
 
-| Suite  | Tools                                                                                                               | Tests          |
-| ------ | ------------------------------------------------------------------------------------------------------------------- | -------------- |
-| Shared | Vitest                                                                                                              | 52 in 3 files  |
-| Server | Vitest + Supertest against the real Express app and an in-memory MongoDB replica set (each file in its own process) | 109 in 9 files |
-| Client | Vitest + Testing Library + jsdom                                                                                    | 50 in 8 files  |
-| E2E    | Playwright + `@axe-core/playwright`                                                                                 | 8+ user flows  |
+| Suite  | Tools                                                                                                               | Tests           |
+| ------ | ------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Shared | Vitest                                                                                                              | 52 in 3 files   |
+| Server | Vitest + Supertest against the real Express app and an in-memory MongoDB replica set (each file in its own process) | 126 in 11 files |
+| Client | Vitest + Testing Library + jsdom                                                                                    | 50 in 8 files   |
+| E2E    | Playwright + `@axe-core/playwright`                                                                                 | 58 tests        |
 
 - **Server:** registration, sign-in, lockout, refresh rotation, reuse detection and the CSRF guard; `alg: none` and wrong-secret tokens; account status at sign-in and on live sessions; RBAC; subscribing, upgrades, downgrades, double verification and **concurrent purchases** (never two active plans); forged signatures; usage limits under **racing requests**; admin actions and their guard rails; CSV formula injection; NoSQL operators and markup in input; security headers and CORS; every envelope failure (tamper, wrong path, replay, stale timestamp, unknown key, plaintext when required); proration maths; expiry and reminders.
 - **Shared:** key agreement, sealing and every tamper case; schemas; sanitising.

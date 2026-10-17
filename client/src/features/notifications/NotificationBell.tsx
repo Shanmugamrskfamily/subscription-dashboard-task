@@ -60,7 +60,11 @@ export function NotificationRow({
         <div className="flex items-start justify-between gap-2">
           <p className={cn('text-sm font-extrabold', compact && 'truncate')}>{n.title}</p>
           {!n.readAt && (
-            <span className="mt-1.5 size-2 shrink-0 rounded-full bg-brand" aria-label="Unread" />
+            <span
+              className="mt-1.5 size-2 shrink-0 rounded-full bg-brand"
+              role="img"
+              aria-label="Unread"
+            />
           )}
         </div>
         <p className={cn('mt-0.5 text-[13px] text-muted', compact && 'line-clamp-2')}>{n.body}</p>

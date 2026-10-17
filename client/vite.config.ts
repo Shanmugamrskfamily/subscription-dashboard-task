@@ -41,6 +41,9 @@ function seoFiles(mode: string): Plugin {
   };
 }
 
+/** Where /api goes in dev and preview. The end-to-end run points it at its own API port. */
+const API_PROXY_TARGET = process.env.API_PROXY_TARGET || 'http://localhost:5000';
+
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(), seoFiles(mode)],
   resolve: {
@@ -49,11 +52,11 @@ export default defineConfig(({ mode }) => ({
   server: {
     port: 5173,
     // Same-origin in development too: the refresh cookie and the CSP behave like production.
-    proxy: { '/api': { target: 'http://localhost:5000', changeOrigin: false } },
+    proxy: { '/api': { target: API_PROXY_TARGET, changeOrigin: false } },
   },
   preview: {
     port: 4173,
-    proxy: { '/api': { target: 'http://localhost:5000', changeOrigin: false } },
+    proxy: { '/api': { target: API_PROXY_TARGET, changeOrigin: false } },
   },
   build: {
     target: 'es2022',

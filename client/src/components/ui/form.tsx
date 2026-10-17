@@ -1,7 +1,7 @@
 import { useField, useFormikContext } from 'formik';
 import type { FormikHelpers } from 'formik';
 import { AlertCircle, Eye, EyeOff } from 'lucide-react';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type {
   InputHTMLAttributes,
   ReactNode,
@@ -226,18 +226,18 @@ export function SelectField({
 
 /** After a failed submit, moves focus to the first field with an error. */
 export function FocusFirstError() {
-  const { submitCount, isValid, errors } = useFormikContext();
+  const { submitCount, isSubmitting, isValid, errors } = useFormikContext();
+  const handled = useRef(0);
   useEffect(() => {
-    if (!submitCount || isValid) return;
+    // Validation is async: wait until this submit attempt has settled, then act once.
+    if (!submitCount || isSubmitting || isValid || handled.current === submitCount) return;
     const first = Object.keys(errors as object)[0];
     if (!first) return;
-    const el = document.querySelector<HTMLElement>(
-      `[name="${CSS.escape(first)}"], [name^="${CSS.escape(first)}."]`,
-    );
-    el?.focus();
-    // Run only when a submit attempt happens.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submitCount]);
+    handled.current = submitCount;
+    document
+      .querySelector<HTMLElement>(`[name="${CSS.escape(first)}"], [name^="${CSS.escape(first)}."]`)
+      ?.focus();
+  }, [submitCount, isSubmitting, isValid, errors]);
   return null;
 }
 

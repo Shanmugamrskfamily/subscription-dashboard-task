@@ -37,7 +37,7 @@ export function UserMenu() {
     <Menu>
       <MenuTrigger
         className="flex cursor-pointer items-center gap-2 rounded-xl p-1 pr-2 hover:bg-surface-2"
-        aria-label="Account menu"
+        aria-label={`${user.name.split(' ')[0]}, account menu`}
       >
         <Avatar name={user.name} />
         <span className="hidden max-w-32 truncate text-sm font-extrabold md:block">

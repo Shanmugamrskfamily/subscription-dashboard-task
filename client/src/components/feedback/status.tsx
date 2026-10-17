@@ -83,6 +83,8 @@ export function ServerWakeBanner() {
     const ping = async (attempt = 0): Promise<void> => {
       try {
         const res = await fetch('/api/health', { cache: 'no-store' });
+        // Only the status matters; releasing the body closes the request.
+        void res.body?.cancel().catch(() => undefined);
         if (res.ok) {
           clearTimeout(slow);
           if (!cancelled) setWaking(false);

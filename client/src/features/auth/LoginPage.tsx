@@ -18,19 +18,13 @@ import {
   TextField,
 } from '../../components/ui/form';
 import { cn } from '../../lib/cn';
+import { safeNext } from '../../lib/navigation';
 import { LockoutBanner, RestrictionBanner } from './AccountNotice';
 import { useLoginMutation } from './authApi';
 import { restrictionCleared } from './authSlice';
 import { AuthLayout } from './AuthLayout';
 import { DEMO_ACCOUNTS, RESTRICTED_ACCOUNTS } from './demoAccounts';
 import type { DemoAccount } from './demoAccounts';
-
-/** Only same-site paths are allowed as a post-login destination (no open redirects). */
-export function safeNext(next: string | null): string | null {
-  return next && next.startsWith('/') && !next.startsWith('//') && !next.startsWith('/login')
-    ? next
-    : null;
-}
 
 export default function LoginPage() {
   const [params] = useSearchParams();
