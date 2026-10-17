@@ -24,6 +24,7 @@ import { Button } from '../ui/button';
 import { Drawer } from '../ui/dialog';
 import { Illustration } from '../ui/feedback';
 import { ThemeToggle, UserMenu } from './controls';
+import { SiteFooter } from './Footer';
 import { ShellContext } from './Page';
 
 const NAV = [
@@ -178,6 +179,9 @@ export function AdminShell() {
             </ShellContext.Provider>
           </motion.div>
         </main>
+        <div className="px-4 pb-6 sm:px-6 lg:px-8">
+          <SiteFooter />
+        </div>
       </div>
 
       <Drawer open={open} onOpenChange={setOpen} title="PlanPilot admin">
