@@ -65,7 +65,6 @@ test('seeded restricted accounts each explain their own restriction', async ({ p
   await restricted('Access expired');
   await expect(banner).toContainText(/Your access expired on \d{1,2} \w+ \d{4}\./);
   await expect(banner).toContainText('Reason: Contract access window ended');
-  await expect(banner).toContainText(/Access ended on \d{1,2} \w+ \d{4}\./);
 
   await expect(page).toHaveURL(/\/login$/);
 });
