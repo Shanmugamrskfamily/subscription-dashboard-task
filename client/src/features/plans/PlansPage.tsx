@@ -308,9 +308,17 @@ export default function PlansPage() {
               <ShieldCheck className="size-5 text-success" aria-hidden /> Secure test payments
             </h2>
             <p className="mt-1 text-sm text-muted">
-              Checkout runs in Razorpay test mode. Try UPI ID{' '}
-              <b className="text-ink">success@razorpay</b> or a test card from Razorpay's checkout.
-              No real money moves.
+              Checkout runs in Razorpay test mode. Choose <b className="text-ink">Netbanking</b>,
+              pick any bank and tap <b className="text-ink">Success</b>, or use a{' '}
+              <a
+                href="https://razorpay.com/docs/payments/payments/test-card-details/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-extrabold text-brand-ink underline underline-offset-2"
+              >
+                Razorpay test card
+              </a>
+              . No real money moves.
             </p>
           </div>
         </Card>
