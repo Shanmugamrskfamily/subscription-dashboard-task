@@ -127,6 +127,7 @@ export function AppShell() {
                     {t.to === '/notifications' && (data?.unread ?? 0) > 0 && (
                       <span
                         className="absolute top-0.5 right-3 size-2.5 rounded-full border-2 border-surface bg-danger"
+                        role="img"
                         aria-label={`${data?.unread} unread`}
                       />
                     )}

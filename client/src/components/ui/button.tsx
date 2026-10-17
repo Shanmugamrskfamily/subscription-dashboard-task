@@ -14,7 +14,7 @@ export const buttonVariants = cva(
         outline:
           'border-[1.5px] border-line bg-surface text-ink hover:border-line-strong hover:bg-surface-2',
         ghost: 'text-ink hover:bg-surface-2',
-        danger: 'bg-danger text-white hover:brightness-110',
+        danger: 'bg-danger-solid text-white hover:brightness-110',
         'danger-ghost': 'text-danger-ink hover:bg-danger-soft',
         link: 'text-brand-ink underline-offset-4 hover:underline active:scale-100',
       },
