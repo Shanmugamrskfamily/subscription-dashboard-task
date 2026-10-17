@@ -230,13 +230,38 @@ describe('plan changes', () => {
     expect(res.body.data.subscription.daysLeft).toBeGreaterThan(60);
   });
 
-  it('refuses to re-buy the plan you already have', async () => {
+  it('renews the current plan early, adding a full period after the current end date', async () => {
+    const first = await buyPlan(user, planId('pro'));
+    const firstEnd = new Date(first.subscription.endDate).getTime();
+
+    const preview = await api()
+      .get(`/api/subscribe/${planId('pro')}/preview`)
+      .set(user.auth)
+      .expect(200);
+    expect(preview.body.data).toMatchObject({
+      changeType: 'renewal',
+      credit: 0,
+      amountDue: 79_900,
+    });
+    expect(new Date(preview.body.data.endDate).getTime()).toBe(firstEnd + 30 * DAY_MS);
+
+    const renewed = await buyPlan(user, planId('pro'));
+    expect(renewed.subscription).toMatchObject({ changeType: 'renewal', plan: { name: 'Pro' } });
+    expect(new Date(renewed.subscription.endDate).getTime()).toBe(firstEnd + 30 * DAY_MS);
+    expect(await SubscriptionModel.countDocuments({ userId: user.user.id, status: 'active' })).toBe(
+      1,
+    );
+  });
+
+  it('allows one renewal ahead, not an endless stack', async () => {
+    await buyPlan(user, planId('pro'));
     await buyPlan(user, planId('pro'));
     const res = await api()
       .post(`/api/subscribe/${planId('pro')}`)
       .set(user.auth)
       .expect(409);
     expect(res.body.error.code).toBe('ALREADY_SUBSCRIBED');
+    expect(res.body.error.message).toMatch(/already renewed until/);
   });
 
   it('never ends up with two active plans, even under concurrent requests', async () => {

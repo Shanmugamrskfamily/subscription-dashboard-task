@@ -58,7 +58,7 @@ A full-stack subscription management dashboard. Customers pick a plan, pay throu
 | -------------- | ----------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------- |
 | Admin          | `admin@planpilot.demo`  | `Admin@12345` | Analytics overview, subscriptions table with filters and CSV export, user and plan controls, activity log             |
 | Pro, active    | `priya@planpilot.demo`  | `Demo@12345`  | Upgraded mid-cycle from Starter, so billing history shows a prorated charge. Usage bars, upgrade and downgrade quotes |
-| Expiring soon  | `kavya@planpilot.demo`  | `Demo@12345`  | Pro plan ending in 2 days: the renewal pop-up and an "expires soon" notification                                      |
+| Expiring soon  | `kavya@planpilot.demo`  | `Demo@12345`  | Pro plan ending in 2 days: the renewal pop-up, an "expires soon" notification and early renewal                       |
 | Expired        | `arjun@planpilot.demo`  | `Demo@12345`  | Starter expired 6 days ago: read-only workspace and a renew prompt                                                    |
 | New user       | `neha@planpilot.demo`   | `Demo@12345`  | No plan yet (status "none"): the first purchase                                                                       |
 | At the limit   | `dev@planpilot.demo`    | `Demo@12345`  | Starter with 3 of 3 projects: creating a fourth opens the upgrade dialog                                              |
@@ -66,9 +66,9 @@ A full-stack subscription management dashboard. Customers pick a plan, pay throu
 | Inactive       | `sneha@planpilot.demo`  | `Demo@12345`  | Sign-in refused: "Your account is inactive." with the reason                                                          |
 | Access expired | `vikram@planpilot.demo` | `Demo@12345`  | Sign-in refused: "Your access expired on …" (the admin's access-until date has passed)                                |
 
-These are test credentials for a demo database. Around 50 more sample customers with six months of plan history, payments and usage fill the charts and tables. It is all sample data, and "Online now" only ever counts real activity.
+These are test credentials for a demo database. Around 50 more sample customers with six months of plan history, payments and usage fill the charts and tables. It is all sample data, and "Online now" only ever counts real activity. The demo rebuilds itself every night (02:00–05:00 IST) once it is a day old, so each account above is always in the state its row describes.
 
-**A two-minute tour:** sign in as Neha and buy Starter → as Priya, open Plans and preview the Business upgrade (the credit for unused days is shown before you pay) → as Dev, try to add a project → as the admin, click a slice of the plan-mix chart to open the filtered subscriptions table, then open a customer and change their status → sign in as Rohan to see the blocked message.
+**A two-minute tour:** sign in as Neha and buy Starter → as Kavya, renew from the expiry pop-up (30 days are added after the current end date) → as Priya, open Plans and preview the Business upgrade (the credit for unused days is shown before you pay) → as Dev, try to add a project → as the admin, click a slice of the plan-mix chart to open the filtered subscriptions table, then open a customer and change their status → sign in as Rohan to see the blocked message.
 
 ## Screenshots
 
@@ -147,7 +147,7 @@ Every item in the brief, and where to find it.
 | Status: active, expired or none                                   | Status badges throughout, plus pop-ups when a plan is about to expire or has ended                                           | [badge.tsx](client/src/components/ui/badge.tsx), [PlanReminders.tsx](client/src/features/subscription/PlanReminders.tsx)   |
 | **Bonus:** Stripe or Razorpay (test mode)                         | Razorpay Orders API and Checkout; the signature is verified on the server                                                    | [gateway.ts](server/src/modules/payments/gateway.ts), [payment.service.ts](server/src/modules/payments/payment.service.ts) |
 | **Bonus:** dark/light theme toggle                                | Light, Dark or System; applied before first paint and synced across tabs                                                     | [theme.tsx](client/src/features/theme/theme.tsx), [theme-init.js](client/public/theme-init.js)                             |
-| **Bonus:** upgrade/downgrade logic                                | Proration: credit for unused days, bonus days when credit exceeds the new price                                              | [proration.ts](server/src/modules/subscriptions/proration.ts)                                                              |
+| **Bonus:** upgrade/downgrade logic                                | Proration: credit for unused days, bonus days when credit exceeds the new price; early renewal adds a period after the end   | [proration.ts](server/src/modules/subscriptions/proration.ts)                                                              |
 | **Bonus:** deployment                                             | Vercel (web), Render (API), MongoDB Atlas; CI on GitHub Actions                                                              | [vercel.json](vercel.json), [render.yaml](render.yaml), [ci.yml](.github/workflows/ci.yml)                                 |
 
 ## Beyond the brief
@@ -157,6 +157,7 @@ Every item in the brief, and where to find it.
 - **Admin account controls.** From a user drawer, an admin can assign or change a plan without payment, extend or expire it, set the account to active, inactive or blocked, set an "access until" date, change the role, or sign the user out of every device. Plan and status changes need a reason (5–200 characters), are logged and notify the user. Admins can't act on themselves, and the last active admin can't be removed.
 - **Specific sign-in errors.** Blocked, inactive and access-expired accounts each get their own message with the admin's reason, shown only after the correct password, so nobody can probe which emails exist. A restriction applied to a signed-in user ends their session on the next request, with a modal that explains why.
 - **Proration with credit and bonus days.** Unused days become credit on the new plan; credit beyond the new price turns into bonus days. A preview shows the exact breakdown before anything is charged. [Worked example](#subscription-lifecycle-and-proration)
+- **Early renewal.** Customers can renew the plan they are on from the dashboard, the plans page or the expiry pop-up: they pay the plan price and a full period is added after the current end date, so no paid day is lost. One renewal ahead is allowed.
 - **Notifications.** Toasts for every action, a bell with an unread count (polled every 30 s), a notifications page grouped by day with an unread filter, and pop-ups when a plan expires within 3 days or has ended. A background job sends reminders 3 days and 1 day before the end date.
 - **Admin analytics.** MRR, revenue, active subscribers, new subscriptions and sign-ups, churn, users online now (refreshed every 20 s), active users, plans expiring soon and users at their limit, over 7 days, 30 days, 90 days or 12 months. Clicking a plan or status slice opens the subscriptions table already filtered.
 - **Audit and activity log.** Sign-ups, sign-ins, plan changes, admin actions and security events (account lockouts, refresh-token reuse, payment signature mismatches) in an admin feed. Entries expire after 30 days.
@@ -164,10 +165,10 @@ Every item in the brief, and where to find it.
 - **Session management.** The profile page lists every signed-in device; sign out one, or every device at once. Changing the password signs out all other devices.
 - **Idle sign-out and cross-tab sync.** After 30 idle minutes a 60-second warning appears, then the session ends. Signing in or out in one tab is followed in every tab, a Web Lock stops two tabs refreshing at the same moment, and the theme choice syncs too.
 - **Loading and error states.** Branded splash and loader, skeleton placeholders, a route progress bar, an offline banner, a "waking up the server" banner for cold starts, empty states with a next step, and branded 404, 403 and 500 pages.
-- **Accessibility.** Skip-to-content links, visible labels with field-level errors, keyboard-friendly menus and dialogs built on Radix primitives, 44 px touch targets on phones, reduced-motion support, and axe scans in light and dark in the E2E suite.
+- **Accessibility.** WCAG AA colour contrast in both themes, skip-to-content links, visible labels with field-level errors, keyboard-friendly menus and dialogs built on Radix primitives, 44 px touch targets on phones, reduced-motion support, and axe scans in light and dark in the E2E suite.
 - **SEO and link previews.** Static Open Graph and Twitter tags with a 1200 × 630 share image, JSON-LD for the app and its four INR plans, per-page titles, `robots.txt` and `sitemap.xml` written at build time, and a web manifest with icons. The logo, icons and share image are rendered from one HTML source by [generate-brand-assets.mjs](scripts/generate-brand-assets.mjs).
 - **CSP and security headers** on both the web app and the API. [Details](#security)
-- **Tests and CI.** 228 unit and integration tests with coverage gates, 58 Playwright end-to-end tests with axe, Git hooks and a GitHub Actions pipeline. [Details](#testing)
+- **Tests and CI.** 230 unit and integration tests with coverage gates, 59 Playwright end-to-end tests with axe, Git hooks and a GitHub Actions pipeline. [Details](#testing)
 
 ## Architecture
 
@@ -250,7 +251,7 @@ A user has at most one active subscription, enforced by a partial unique index i
 
 Paid changes go through Razorpay: the server calculates the amount and creates the order, Checkout collects the payment, and `POST /api/payments/verify` checks the signature, then closes the old period and opens the new one inside a MongoDB transaction. When credit covers the new plan, the switch happens at once with nothing to pay.
 
-Every plan change uses one rule from [`proration.ts`](server/src/modules/subscriptions/proration.ts): **credit** is the unused share of what the current period was worth (by time left, rounded down to whole paise); **amount due** is the new price minus credit, never below zero, and under ₹1 counts as zero; credit left over becomes **bonus days** on the new plan at its daily rate, up to 365. The new plan always starts now. Two worked examples:
+Every plan change uses one rule from [`proration.ts`](server/src/modules/subscriptions/proration.ts): **credit** is the unused share of what the current period was worth (by time left, rounded down to whole paise); **amount due** is the new price minus credit, never below zero, and under ₹1 counts as zero; credit left over becomes **bonus days** on the new plan at its daily rate, up to 365. The new plan always starts now. The one exception is **renewing the current plan early**: the full price is charged and the new period starts where the current one ends (for example, Pro with 2 days left, renewed today, runs for 2 + 30 = 32 days); one renewal ahead is allowed. Two worked examples of plan changes:
 
 |              | Upgrade: Starter to Pro                      | Downgrade: Pro to Starter                                            |
 | ------------ | -------------------------------------------- | -------------------------------------------------------------------- |
@@ -302,7 +303,7 @@ All routes live under `/api`. Request and response bodies are encrypted on the w
 | GET    | `/my-subscription`                | user                        | Active plan with usage and limits, or `none` / `expired` / `cancelled` with the last plan        |
 | POST   | `/my-subscription/cancel`         | user                        | Cancel the active plan                                                                           |
 | GET    | `/subscribe/:planId/preview`      | user                        | Quote: change type, credit, amount due, bonus days, new end date                                 |
-| POST   | `/subscribe/:planId`              | user                        | Subscribe or change plan; activates at once or returns a Razorpay order                          |
+| POST   | `/subscribe/:planId`              | user                        | Subscribe, change plan or renew early; activates at once or returns a Razorpay order             |
 | POST   | `/payments/verify`                | user                        | Verify the Razorpay signature and activate the plan (idempotent)                                 |
 | POST   | `/payments/:orderId/fail`         | user                        | Record a dismissed or failed checkout                                                            |
 | GET    | `/projects`                       | user                        | List projects                                                                                    |
@@ -477,9 +478,9 @@ Run from the repository root.
 | Suite  | Tools                                                                                                               | Tests           |
 | ------ | ------------------------------------------------------------------------------------------------------------------- | --------------- |
 | Shared | Vitest                                                                                                              | 52 in 3 files   |
-| Server | Vitest + Supertest against the real Express app and an in-memory MongoDB replica set (each file in its own process) | 126 in 11 files |
+| Server | Vitest + Supertest against the real Express app and an in-memory MongoDB replica set (each file in its own process) | 128 in 11 files |
 | Client | Vitest + Testing Library + jsdom                                                                                    | 50 in 8 files   |
-| E2E    | Playwright + `@axe-core/playwright`                                                                                 | 58 tests        |
+| E2E    | Playwright + `@axe-core/playwright`                                                                                 | 59 tests        |
 
 - **Server:** registration, sign-in, lockout, refresh rotation, reuse detection and the CSRF guard; `alg: none` and wrong-secret tokens; account status at sign-in and on live sessions; RBAC; subscribing, upgrades, downgrades, double verification and **concurrent purchases** (never two active plans); forged signatures; usage limits under **racing requests**; admin actions and their guard rails; CSV formula injection; NoSQL operators and markup in input; security headers and CORS; every envelope failure (tamper, wrong path, replay, stale timestamp, unknown key, plaintext when required); proration maths; expiry and reminders.
 - **Shared:** key agreement, sealing and every tamper case; schemas; sanitising.
@@ -515,7 +516,7 @@ Set `VITE_SITE_URL` (the Vercel URL), `VITE_PAYLOAD_PUBLIC_KEY` (same as the ser
 
 **4. Keep-warm.** [`keep-warm.yml`](.github/workflows/keep-warm.yml) pings the health endpoint every 14 minutes from about 07:30 to 23:30 IST so reviewers rarely hit a cold start. Enable it by setting the repository variable `API_HEALTH_URL` (Settings → Secrets and variables → Actions → Variables) to the Render health URL, e.g. `https://planpilot-api-0i0d.onrender.com/api/health`.
 
-**Demo data over time.** The demo story is relative to when it was seeded (Kavya's plan ends two days after seeding, for example). To rebuild it, sign in as the admin and use **Reset demo data** in the admin sidebar (it works while `DEMO_MODE=true`), or run `npm run seed -- --fresh` locally with `MONGODB_URI` pointing at Atlas.
+**Demo data over time.** The demo story is relative to when it was seeded (Kavya's plan ends two days after seeding, for example). With `DEMO_MODE=true` the API rebuilds it automatically between 02:00 and 05:00 IST once it is a day old ([demo-refresh.ts](server/src/jobs/demo-refresh.ts)). To rebuild it on demand, sign in as the admin and use **Reset demo data** in the admin sidebar (it asks for confirmation and then signs everyone out), or run `npm run seed -- --fresh` locally with `MONGODB_URI` pointing at Atlas.
 
 ## Design
 
@@ -530,7 +531,7 @@ Set `VITE_SITE_URL` (the Vercel URL), `VITE_PAYLOAD_PUBLIC_KEY` (same as the ser
 
 - **Cold starts.** Render's free tier sleeps after 15 idle minutes. The keep-warm job and the wake-up banner soften it; a paid instance removes it.
 - **Payment confirmation runs through the browser.** The plan activates when the client calls `/payments/verify` after Checkout. Razorpay webhooks would be the next step, so payments are reconciled even if the tab closes before verification.
-- **Renewal is manual.** Plans are prepaid periods; reminders and pop-ups prompt the renewal. Automatic renewal with Razorpay Subscriptions would come next.
+- **Renewal is manual.** Plans are prepaid periods; reminders and pop-ups prompt the renewal, and customers can renew early in one click. Automatic renewal with Razorpay Subscriptions would come next.
 - **Single-instance state.** Replay-protection nonces, derived session keys, unknown-email lockouts and rate-limit counters are held in process memory. That suits one instance; scaling out would move them to a shared store such as Redis.
 - **Background jobs share the API process.** Expiry is also checked on every read, so statuses are always correct, but reminders only go out while the instance is awake. A scheduled worker would make them punctual.
 - **In-app notifications only,** polled every 30 seconds. Email and server-sent events are natural additions.
