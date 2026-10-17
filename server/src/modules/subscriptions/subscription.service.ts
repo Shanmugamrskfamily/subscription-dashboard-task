@@ -1,4 +1,4 @@
-import { ERROR_CODES } from '@planpilot/shared';
+import { DAY_MS, ERROR_CODES } from '@planpilot/shared';
 import type {
   ChangeType,
   MySubscriptionDto,
@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import type { ClientSession, Types } from 'mongoose';
 import type { AppConfig } from '../../config/env';
 import { ApiError } from '../../utils/api-error';
+import { formatDate } from '../../utils/format';
 import { logActivity } from '../activity/activity.service';
 import { notify } from '../notifications/notification.service';
 import type { NotificationData } from '../notifications/notification.service';
@@ -118,9 +119,14 @@ export interface QuoteResult {
 export async function quoteChange(userId: string, planId: string): Promise<QuoteResult> {
   const plan = await findPlanOrThrow(planId);
   const current = await getCurrentPlan(userId);
-  if (current && current.sub.planId.toString() === plan._id.toString()) {
+  // The current plan can be renewed once ahead (the new period follows the current one).
+  if (
+    current &&
+    current.sub.planId.toString() === plan._id.toString() &&
+    new Date(current.sub.endDate).getTime() - Date.now() > plan.durationDays * DAY_MS
+  ) {
     throw ApiError.conflict(
-      `You are already on the ${plan.name} plan.`,
+      `Your ${plan.name} plan is already renewed until ${formatDate(current.sub.endDate)}.`,
       ERROR_CODES.ALREADY_SUBSCRIBED,
     );
   }

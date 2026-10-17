@@ -36,6 +36,7 @@ export function changeTypeFor(
   hadPrevious: boolean,
 ): ChangeType {
   if (!current) return hadPrevious ? 'renewal' : 'new';
+  if (plan.id === current.planId) return 'renewal';
   if (plan.tier !== current.tier) return plan.tier > current.tier ? 'upgrade' : 'downgrade';
   // Same tier, different billing cycle: committing for longer counts as an upgrade.
   return plan.durationDays >= current.durationDays ? 'upgrade' : 'downgrade';
@@ -65,6 +66,22 @@ export function computeQuote(
 ): ComputedQuote {
   const changeType = changeTypeFor(plan, current, hadPrevious);
   const credit = unusedCredit(current, now);
+
+  // Renewing the current plan early: pay the full price and the new period is added
+  // after the current end date, so no paid day is lost. The unused value carries over
+  // in the credit basis for any later plan change.
+  if (current && plan.id === current.planId) {
+    const from = Math.max(current.endDate.getTime(), now.getTime());
+    return {
+      changeType,
+      credit: 0,
+      amountDue: plan.price,
+      bonusDays: 0,
+      startDate: now,
+      endDate: new Date(from + plan.durationDays * DAY_MS),
+      creditBasis: plan.price + credit,
+    };
+  }
 
   let amountDue = Math.max(0, plan.price - credit);
   if (amountDue > 0 && amountDue < MIN_CHARGE_PAISE) amountDue = 0;
