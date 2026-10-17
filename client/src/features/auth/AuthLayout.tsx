@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { LogoMark } from '../../components/brand/logo';
+import { DeveloperCredit } from '../../components/layout/Footer';
 import { ThemeToggle } from '../../components/layout/controls';
 import { Illustration } from '../../components/ui/feedback';
 
@@ -93,6 +94,7 @@ export function AuthLayout({
           <div className="mt-6">{children}</div>
           <div className="mt-6 text-center text-sm text-muted">{footer}</div>
         </motion.div>
+        <DeveloperCredit className="mx-auto w-full max-w-md" />
       </main>
     </div>
   );

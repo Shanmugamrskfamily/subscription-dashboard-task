@@ -9,6 +9,7 @@ import { cn } from '../../lib/cn';
 import { Logo } from '../brand/logo';
 import { buttonVariants } from '../ui/button';
 import { ThemeToggle, UserMenu } from './controls';
+import { SiteFooter } from './Footer';
 
 const TOP_LINKS = [
   { to: '/plans', label: 'Plans' },
@@ -92,7 +93,7 @@ export function AppShell() {
         </div>
       </header>
 
-      <main id="main" className={cn('flex-1', isCustomer && 'pb-24 md:pb-0')}>
+      <main id="main" className="flex-1">
         <motion.div
           key={pathname}
           initial={{ opacity: 0, y: 8 }}
@@ -102,6 +103,15 @@ export function AppShell() {
           <Outlet />
         </motion.div>
       </main>
+      {/* On phones the customer tab bar is fixed at the bottom, so the footer clears it. */}
+      <div
+        className={cn(
+          'mx-auto w-full max-w-6xl px-4 pt-4 pb-6 sm:px-6',
+          isCustomer && 'pb-28 md:pb-6',
+        )}
+      >
+        <SiteFooter />
+      </div>
 
       {isCustomer && (
         <>
