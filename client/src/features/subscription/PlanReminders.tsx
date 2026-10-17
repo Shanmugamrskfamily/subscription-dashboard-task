@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/button';
 import { Modal } from '../../components/ui/dialog';
 import { Illustration } from '../../components/ui/feedback';
 import { formatDate, plural } from '../../lib/format';
+import { useCheckout } from '../billing/CheckoutFlow';
 import { useMySubscriptionQuery } from './subscriptionApi';
 
 const seenKey = (key: string) => `planpilot-reminder:${key}`;
@@ -30,6 +31,7 @@ export function PlanReminders() {
   const { data } = useMySubscriptionQuery();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { start } = useCheckout();
   const [open, setOpen] = useState(false);
 
   const sub = data?.subscription;
@@ -54,6 +56,12 @@ export function PlanReminders() {
     close();
     navigate('/plans');
   };
+  // Renewing straight from the reminder: the same checkout as the plans page.
+  const renewPlan = expiring ? sub.plan : last?.plan;
+  const renew = () => {
+    close();
+    if (renewPlan) start(renewPlan);
+  };
 
   return (
     <Modal
@@ -71,10 +79,13 @@ export function PlanReminders() {
       }
       footer={
         <>
-          <Button variant="outline" onClick={close}>
+          <Button variant="ghost" onClick={close}>
             Remind me later
           </Button>
-          <Button onClick={goToPlans}>{expiring ? 'Renew or change plan' : 'Choose a plan'}</Button>
+          <Button variant="outline" onClick={goToPlans}>
+            {expiring ? 'Change plan' : 'See all plans'}
+          </Button>
+          <Button onClick={renew}>Renew {renewPlan?.name}</Button>
         </>
       }
     >

@@ -1,3 +1,4 @@
+import { ERROR_CODES } from '@planpilot/shared';
 import type { MySubscriptionDto, PlanDto } from '@planpilot/shared';
 import {
   ArrowDownRight,
@@ -34,9 +35,8 @@ function PlanCta({ plan, mine }: { plan: PlanDto; mine: MySubscriptionDto | unde
   const { status, user } = useAppSelector((s) => s.auth);
   const { start, busyPlanId } = useCheckout();
   const isCurrent = mine?.subscription?.plan.id === plan.id;
-  const canPreview =
-    status === 'authenticated' && user?.role === 'user' && !isCurrent && Boolean(mine);
-  const { data: quote } = usePreviewQuery(plan.id, { skip: !canPreview });
+  const canPreview = status === 'authenticated' && user?.role === 'user' && Boolean(mine);
+  const { data: quote, error: quoteError } = usePreviewQuery(plan.id, { skip: !canPreview });
 
   if (status !== 'authenticated') {
     return (
@@ -59,9 +59,24 @@ function PlanCta({ plan, mine }: { plan: PlanDto; mine: MySubscriptionDto | unde
     );
   }
   if (isCurrent) {
+    // The current plan can be renewed early, once: the new period follows the current one.
+    const daysLeft = plural(mine?.subscription?.daysLeft ?? 0, 'day');
+    const renewedAhead = errorOf(quoteError)?.code === ERROR_CODES.ALREADY_SUBSCRIBED;
+    if (!quote || renewedAhead) {
+      return (
+        <Button variant="secondary" className="w-full" disabled>
+          {renewedAhead ? `Renewed · ${daysLeft} left` : `Current plan · ${daysLeft} left`}
+        </Button>
+      );
+    }
     return (
-      <Button variant="secondary" className="w-full" disabled>
-        Current plan · {plural(mine?.subscription?.daysLeft ?? 0, 'day')} left
+      <Button
+        variant="outline"
+        className="w-full"
+        loading={busyPlanId === plan.id}
+        onClick={() => start(plan)}
+      >
+        <RefreshCw /> Renew early · pay {formatInr(quote.amountDue)}
       </Button>
     );
   }
