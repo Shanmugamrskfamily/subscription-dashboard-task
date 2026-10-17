@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiError, axiosError } from '../../test/axios';
 import { LocationProbe, makeSession, renderApp } from '../../test/utils';
-import LoginPage, { safeNext } from './LoginPage';
+import { safeNext } from '../../lib/navigation';
+import LoginPage from './LoginPage';
 
 const mocks = vi.hoisted(() => ({ request: vi.fn() }));
 vi.mock('../../api/http', () => ({ http: { request: mocks.request, post: vi.fn() } }));

@@ -1,8 +1,9 @@
 import type { Role } from '@planpilot/shared';
-import { Navigate, Outlet, useLocation } from 'react-router';
+import { Navigate, Outlet, useLocation, useSearchParams } from 'react-router';
 import { AdminShell } from '../components/layout/AdminShell';
 import { AppShell } from '../components/layout/AppShell';
 import { BrandLoader } from '../components/feedback/status';
+import { safeNext } from '../lib/navigation';
 import { ForbiddenPage } from '../pages/ErrorPages';
 import { useAppSelector } from './store';
 
@@ -32,10 +33,17 @@ export function RequireRole({ role }: { role: Role }) {
   return <ForbiddenPage />;
 }
 
+/**
+ * Sign-in and sign-up pages. The moment a session starts, this is what moves the
+ * visitor on: to the safe `?next=` path they were heading to, or their home page.
+ */
 export function GuestOnly() {
   const { status, user } = useAppSelector((s) => s.auth);
+  const [params] = useSearchParams();
   if (status === 'restoring') return <BrandLoader />;
-  if (status === 'authenticated') return <Navigate to={homeFor(user?.role)} replace />;
+  if (status === 'authenticated') {
+    return <Navigate to={safeNext(params.get('next')) ?? homeFor(user?.role)} replace />;
+  }
   return <Outlet />;
 }
 
