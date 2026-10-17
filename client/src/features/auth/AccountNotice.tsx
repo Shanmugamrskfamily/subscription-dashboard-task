@@ -3,7 +3,6 @@ import { Clock } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { Illustration } from '../../components/ui/feedback';
-import { formatDate } from '../../lib/format';
 import type { AccountRestriction } from './authSlice';
 
 const ART = {
@@ -26,9 +25,6 @@ export function RestrictionBanner({ restriction }: { restriction: AccountRestric
       <div className="min-w-0 text-sm">
         <p className="font-extrabold">{restriction.message}</p>
         {restriction.reason && <p className="mt-0.5 opacity-90">Reason: {restriction.reason}</p>}
-        {restriction.code === ERROR_CODES.ACCOUNT_ACCESS_EXPIRED && restriction.expiredAt && (
-          <p className="mt-0.5 opacity-90">Access ended on {formatDate(restriction.expiredAt)}.</p>
-        )}
         {restriction.supportEmail && (
           <p className="mt-1.5">
             Contact{' '}
