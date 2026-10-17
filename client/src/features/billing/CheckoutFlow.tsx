@@ -47,7 +47,7 @@ export function useCheckout() {
 
 const HEADLINE: Record<ProrationQuote['changeType'], string> = {
   new: 'Subscribe to',
-  renewal: 'Renew with',
+  renewal: 'Renew',
   upgrade: 'Upgrade to',
   downgrade: 'Switch to',
   admin_assign: 'Switch to',
@@ -332,6 +332,8 @@ function Row({
 }
 
 export function QuoteBreakdown({ quote }: { quote: ProrationQuote }) {
+  // Renewing the plan you are on: the new period is added after the current one.
+  const renewingEarly = quote.changeType === 'renewal' && quote.currentPlan?.id === quote.plan.id;
   return (
     <div>
       <div className="flex items-center gap-3 rounded-2xl bg-surface-2 p-3.5">
@@ -341,14 +343,18 @@ export function QuoteBreakdown({ quote }: { quote: ProrationQuote }) {
         <div className="min-w-0 text-sm">
           <p className="font-extrabold">
             {CHANGE_LABEL[quote.changeType]}
-            {quote.currentPlan && (
+            {quote.currentPlan && !renewingEarly && (
               <span className="font-bold text-muted">
                 {' '}
                 from <PlanPill slug={quote.currentPlan.slug} name={quote.currentPlan.name} />
               </span>
             )}
           </p>
-          <p className="text-muted">Starts now and runs until {formatDate(quote.endDate)}.</p>
+          <p className="text-muted">
+            {renewingEarly
+              ? `Adds ${plural(quote.plan.durationDays, 'day')} after your current end date: your plan now runs until ${formatDate(quote.endDate)}.`
+              : `Starts now and runs until ${formatDate(quote.endDate)}.`}
+          </p>
         </div>
       </div>
       <dl className="mt-3 divide-y divide-line">

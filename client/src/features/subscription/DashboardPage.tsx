@@ -1,5 +1,13 @@
 import type { MySubscriptionDto, PaymentDto, PlanDto } from '@planpilot/shared';
-import { ArrowRight, CalendarDays, Check, FolderPlus, Rocket, XCircle } from 'lucide-react';
+import {
+  ArrowRight,
+  CalendarDays,
+  Check,
+  FolderPlus,
+  RefreshCw,
+  Rocket,
+  XCircle,
+} from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
@@ -133,6 +141,7 @@ function Welcome({ mine, nextPlan }: { mine: MySubscriptionDto; nextPlan: PlanDt
 
 function PlanCard({ mine }: { mine: MySubscriptionDto }) {
   const navigate = useNavigate();
+  const { start, busyPlanId } = useCheckout();
   const [confirm, setConfirm] = useState(false);
   const [cancel, { isLoading }] = useCancelSubscriptionMutation();
   const sub = mine.subscription;
@@ -189,7 +198,17 @@ function PlanCard({ mine }: { mine: MySubscriptionDto }) {
           </dl>
         </div>
       </div>
-      <div className="mt-5 flex gap-2">
+      <div className="mt-5 flex flex-wrap gap-2">
+        {sub.daysLeft <= sub.plan.durationDays && (
+          <Button
+            size="sm"
+            className="flex-1"
+            loading={busyPlanId === sub.plan.id}
+            onClick={() => start(sub.plan)}
+          >
+            <RefreshCw /> Renew
+          </Button>
+        )}
         <Button variant="outline" size="sm" className="flex-1" onClick={() => navigate('/plans')}>
           Change plan
         </Button>

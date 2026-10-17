@@ -102,13 +102,17 @@ export async function verifyPayment(
     const current = await SubscriptionModel.findOne({ userId: user.id, status: 'active' }).session(
       session,
     );
+    // An early renewal of the same plan starts its new period where the current one ends.
+    const renewing =
+      payment.changeType === 'renewal' && current !== null && current.planId.equals(plan._id);
+    const from = renewing ? Math.max(current.endDate.getTime(), now.getTime()) : now.getTime();
     const sub = await activateSubscription(
       {
         userId: user.id,
         plan,
         changeType: payment.changeType as ChangeType,
         startDate: now,
-        endDate: new Date(now.getTime() + (quote.durationDays + quote.bonusDays) * DAY_MS),
+        endDate: new Date(from + (quote.durationDays + quote.bonusDays) * DAY_MS),
         amountPaid: payment.amount,
         creditBasis: quote.creditBasis,
         previousId: current?._id ?? null,

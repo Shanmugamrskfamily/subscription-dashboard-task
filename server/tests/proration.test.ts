@@ -25,6 +25,8 @@ describe('changeTypeFor', () => {
     // Same tier, longer commitment.
     expect(changeTypeFor(proAnnual, current(pro, 5), false)).toBe('upgrade');
     expect(changeTypeFor(pro, current(proAnnual, 5), false)).toBe('downgrade');
+    // The same plan while it is still active: an early renewal.
+    expect(changeTypeFor(pro, current(pro, 28), false)).toBe('renewal');
   });
 });
 
@@ -42,6 +44,16 @@ describe('unusedCredit', () => {
 });
 
 describe('computeQuote', () => {
+  it('renews early at full price, adding the period after the current end date', () => {
+    // 2 of 30 Pro days left: pay ₹799, the plan now ends 2 + 30 days from today.
+    const now = current(pro, 28);
+    const q = computeQuote(pro, now, false, NOW);
+    expect(q).toMatchObject({ changeType: 'renewal', credit: 0, amountDue: 79_900, bonusDays: 0 });
+    expect(q.endDate.getTime()).toBe(now.endDate.getTime() + 30 * DAY_MS);
+    // The unused 2 days stay in the value basis for any later plan change.
+    expect(q.creditBasis).toBe(79_900 + Math.floor((79_900 * 2) / 30));
+  });
+
   it('charges full price for a first plan', () => {
     const q = computeQuote(pro, null, false, NOW);
     expect(q).toMatchObject({
@@ -76,8 +88,10 @@ describe('computeQuote', () => {
 
   it('treats less than ₹1 due as nothing due', () => {
     const almostFull = { ...current(pro, 0), creditBasis: 79_850 };
-    // ₹0.50 due rounds to nothing: Razorpay can't charge under ₹1.
-    expect(computeQuote(pro, almostFull, false, NOW).amountDue).toBe(0);
+    // A same-priced plan on the same tier: ₹0.50 due rounds to nothing (Razorpay can't
+    // charge under ₹1).
+    const proTwin = { ...pro, id: 'p2' };
+    expect(computeQuote(proTwin, almostFull, false, NOW).amountDue).toBe(0);
   });
 
   it('caps bonus days at a year', () => {

@@ -186,8 +186,9 @@ export const ERROR_CATALOGUE: Record<ErrorCode, ErrorInfo> = {
   },
   [C.ALREADY_SUBSCRIBED]: {
     status: 409,
-    meaning: 'The user is already on this plan (renew or extend it instead).',
-    message: 'You are already on the Pro plan.',
+    meaning:
+      'The current plan is already renewed one period ahead, or another plan was activated at the same moment.',
+    message: 'Your Pro plan is already renewed until 16 Dec 2026.',
   },
   [C.NO_ACTIVE_SUBSCRIPTION]: {
     status: 400,

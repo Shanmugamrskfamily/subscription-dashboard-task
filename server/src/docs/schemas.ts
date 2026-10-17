@@ -176,7 +176,7 @@ export const schemas: Record<string, SchemaObject> = {
   ),
   ChangeType: enumOf(
     CHANGE_TYPES,
-    'How a subscription started: first plan (`new`), a plan after a lapse (`renewal`), a switch to a higher tier or a longer cycle of the same tier (`upgrade`), the opposite (`downgrade`), or set by an administrator (`admin_assign`).',
+    'How a subscription started: first plan (`new`), renewing the current plan early or buying again after a lapse (`renewal`, which adds the new period after the current end date), a switch to a higher tier or a longer cycle of the same tier (`upgrade`), the opposite (`downgrade`), or set by an administrator (`admin_assign`).',
   ),
   PaymentStatus: enumOf(PAYMENT_STATUSES, 'Lifecycle of a Razorpay order.'),
   TeamRole: enumOf(TEAM_ROLES, 'What a team member may do in the workspace.'),

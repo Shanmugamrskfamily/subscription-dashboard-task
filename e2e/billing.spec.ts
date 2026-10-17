@@ -118,3 +118,31 @@ test('upgrading charges only the difference, downgrading turns credit into bonus
   await expect(card.getByText('Starter', { exact: true })).toBeVisible();
   await expect(summaryValue(card, 'How it started')).toHaveText('Downgrade');
 });
+
+test('renewing early adds a full period after the current end date', async ({ page }) => {
+  const session = await registerAs(page);
+  await apiSubscribe(page.request, session, 'starter');
+  await page.goto('/dashboard');
+
+  await currentPlanCard(page).getByRole('button', { name: 'Renew' }).click();
+  const preview = page.getByRole('dialog', { name: 'Renew Starter' });
+  await expect(preview).toBeVisible();
+  const newEnd = formatDate(daysFromNow(60));
+  await expect(preview).toContainText(`your plan now runs until ${newEnd}`);
+  await expect(summaryValue(preview, 'Due today')).toHaveText('₹299');
+  await preview.getByRole('button', { name: 'Pay ₹299' }).click();
+
+  const { charged, success } = await payTestCheckout(page);
+  expect(charged).toBe(29_900);
+  await expect(success).toContainText(`Starter is active until ${newEnd}`);
+  await success.getByRole('button', { name: 'Go to dashboard' }).click();
+
+  const card = currentPlanCard(page);
+  await expect(summaryValue(card, 'Ends')).toHaveText(newEnd);
+  // Renewed one period ahead: no second early renewal.
+  await expect(card.getByRole('button', { name: 'Renew' })).toHaveCount(0);
+  await page.goto('/plans');
+  await expect(
+    planCard(page, 'Starter').getByRole('button', { name: /^Renewed · \d+ days left$/ }),
+  ).toBeDisabled();
+});
