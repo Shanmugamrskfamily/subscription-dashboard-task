@@ -95,7 +95,7 @@ export async function verifyPayment(
     const claimed = await PaymentModel.findOneAndUpdate(
       { _id: payment._id, status: 'created' },
       { status: 'paid', razorpayPaymentId: input.razorpay_payment_id, paidAt: now },
-      { session, new: true },
+      { session, returnDocument: 'after' },
     );
     if (!claimed) return null;
 

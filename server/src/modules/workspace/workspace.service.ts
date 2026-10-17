@@ -52,7 +52,7 @@ export async function updateProject(
 ): Promise<ProjectDto> {
   await requireActivePlan(userId);
   const project = await ProjectModel.findOneAndUpdate({ _id: id, ownerId: userId }, input, {
-    new: true,
+    returnDocument: 'after',
   }).lean<Project>();
   if (!project) throw ApiError.notFound('Project not found');
   return toProject(project);

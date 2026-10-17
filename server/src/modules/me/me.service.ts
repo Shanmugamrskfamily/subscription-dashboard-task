@@ -13,7 +13,7 @@ export async function updateProfile(userId: string, input: UpdateProfileInput): 
   const user = await UserModel.findByIdAndUpdate(
     userId,
     { name: input.name },
-    { new: true },
+    { returnDocument: 'after' },
   ).lean();
   if (!user) throw ApiError.unauthorized();
   return toUserDto(user);

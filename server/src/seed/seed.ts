@@ -84,19 +84,19 @@ const LAST = [
   'Verma',
   'Krishnan',
 ];
-const PROJECTS = [
-  'Website redesign',
-  'Mobile app launch',
-  'Q4 marketing',
-  'Customer portal',
-  'Brand refresh',
-  'Onboarding flow',
-  'Analytics revamp',
-  'Partner program',
-  'Help centre',
-  'Pricing experiment',
-  'Billing migration',
-  'Data warehouse',
+const PROJECTS: [name: string, description: string][] = [
+  ['Website redesign', 'New marketing site with faster pages and a clearer pricing story.'],
+  ['Mobile app launch', 'Ship the Android and iOS apps to the first 500 beta users.'],
+  ['Q4 marketing', 'Diwali campaign, partner webinars and the year-end newsletter.'],
+  ['Customer portal', 'Self-serve invoices, plan changes and support tickets.'],
+  ['Brand refresh', 'Updated logo, colours and illustration style across channels.'],
+  ['Onboarding flow', 'Cut time to first value with a guided setup checklist.'],
+  ['Analytics revamp', 'Move dashboards to one event model and retire old reports.'],
+  ['Partner program', 'Referral tiers, payouts and a partner resource hub.'],
+  ['Help centre', 'Rewrite the top 40 articles and add in-app search.'],
+  ['Pricing experiment', 'Test annual-first pricing on the plans page for four weeks.'],
+  ['Billing migration', 'Move recurring billing to the new payment provider.'],
+  ['Data warehouse', 'Nightly sync of product and billing data for reporting.'],
 ];
 const TEAM_FIRST = [
   'Asha',
@@ -275,10 +275,11 @@ class SeedBuilder {
     const user = this.docs.users.find((u) => u._id === userId);
     if (user) user.usage = { projects, teamMembers: members };
     for (let i = 0; i < projects; i += 1) {
+      const [name, description] = PROJECTS[i % PROJECTS.length] ?? ['Project', ''];
       this.docs.projects.push({
         ownerId: userId,
-        name: PROJECTS[i % PROJECTS.length],
-        description: '',
+        name,
+        description,
         color: PROJECT_COLORS[i % PROJECT_COLORS.length],
         createdAt: this.after(createdAt, i),
         updatedAt: this.after(createdAt, i),

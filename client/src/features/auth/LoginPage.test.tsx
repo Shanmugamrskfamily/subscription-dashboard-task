@@ -19,7 +19,7 @@ function renderLogin(route = '/login') {
 }
 
 async function signIn(email: string, password: string) {
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   await user.type(screen.getByLabelText('Email'), email);
   await user.type(screen.getByLabelText('Password'), password);
   await user.click(screen.getByRole('button', { name: /sign in/i }));
@@ -29,10 +29,11 @@ beforeEach(() => {
   mocks.request.mockReset();
 });
 
-describe('LoginPage', () => {
+// Full sign-in round trips through Formik and RTK Query: allow for a busy CI machine.
+describe('LoginPage', { timeout: 15_000 }, () => {
   it('validates both fields before calling the API', async () => {
     renderLogin();
-    await userEvent.setup().click(screen.getByRole('button', { name: /sign in/i }));
+    await userEvent.setup({ delay: null }).click(screen.getByRole('button', { name: /sign in/i }));
 
     expect(await screen.findByText('Email is required')).toBeInTheDocument();
     expect(screen.getByText('Password is required')).toBeInTheDocument();

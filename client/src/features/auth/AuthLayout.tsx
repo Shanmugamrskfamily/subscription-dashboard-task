@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
-import { Logo, LogoMark } from '../../components/brand/logo';
+import { LogoMark } from '../../components/brand/logo';
 import { ThemeToggle } from '../../components/layout/controls';
 import { Illustration } from '../../components/ui/feedback';
 
@@ -78,10 +78,8 @@ export function AuthLayout({
       </aside>
 
       <main id="main" className="relative flex flex-col px-4 py-6 sm:px-10 lg:px-16">
-        <div className="flex items-center justify-between lg:justify-end">
-          <Link to="/plans" className="lg:hidden" aria-label="PlanPilot home">
-            <Logo size={30} className="text-[17px]" />
-          </Link>
+        {/* The brand banner carries the logo on every screen size. */}
+        <div className="flex justify-end">
           <ThemeToggle />
         </div>
         <motion.div
