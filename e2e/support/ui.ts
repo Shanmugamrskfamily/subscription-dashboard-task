@@ -51,7 +51,7 @@ export async function registerAs(
 
 /** Sign-in through the real form. */
 export async function signInViaForm(page: Page, email: string, password: string) {
-  await page.getByLabel('Email').fill(email);
+  await page.getByLabel('Email', { exact: true }).fill(email);
   await page.getByLabel('Password', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 }
