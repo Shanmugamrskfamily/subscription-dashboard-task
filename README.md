@@ -24,9 +24,9 @@ A full-stack subscription management dashboard. Customers pick a plan, pay throu
 </p>
 
 <p>
-  <!-- LIVE_URL --><a href="https://planpilot.vercel.app"><b>Live demo</b></a>
+  <!-- LIVE_URL --><a href="https://planpilot-dashboard.vercel.app"><b>Live demo</b></a>
   &nbsp;·&nbsp;
-  <!-- LIVE_URL --><a href="https://planpilot-api.onrender.com/api/docs"><b>API docs</b></a>
+  <!-- LIVE_URL --><a href="https://planpilot-api-0i0d.onrender.com/api/docs"><b>API docs</b></a>
   &nbsp;·&nbsp;
   <!-- DEMO_VIDEO_URL --><a href="#see-it-in-action"><b>Demo video</b></a>
 </p>
@@ -47,7 +47,7 @@ A full-stack subscription management dashboard. Customers pick a plan, pay throu
 
 ## Try it in 30 seconds
 
-1. Open the <!-- LIVE_URL -->[live demo](https://planpilot.vercel.app).
+1. Open the <!-- LIVE_URL -->[live demo](https://planpilot-dashboard.vercel.app).
 2. On the sign-in page, click any demo account card. One click fills in the form and signs you in.
 3. When a plan needs paying for, Razorpay opens in **test mode**: use the UPI ID `success@razorpay` (or `failure@razorpay` to see the failure path), or a test card from [Razorpay's test card list](https://razorpay.com/docs/payments/payments/test-card-details/). No real money moves.
 
@@ -287,7 +287,7 @@ Each measure below is in the code, and most are exercised by [`security.test.ts`
 
 ## API reference
 
-All routes live under `/api`. Request and response bodies are encrypted on the wire (plain JSON is accepted in development, so Swagger UI and curl work locally). The OpenAPI document is served at `/api/openapi.json` and rendered by **Swagger UI at `/api/docs`** (<!-- LIVE_URL -->[live](https://planpilot-api.onrender.com/api/docs)).
+All routes live under `/api`. Request and response bodies are encrypted on the wire (plain JSON is accepted in development, so Swagger UI and curl work locally). The OpenAPI document is served at `/api/openapi.json` and rendered by **Swagger UI at `/api/docs`** (<!-- LIVE_URL -->[live](https://planpilot-api-0i0d.onrender.com/api/docs)).
 
 **Access:** _public_ = anyone; _signed in_ = any valid access token; _user_ = customer accounts; _admin_ = admin accounts.
 
@@ -495,13 +495,13 @@ Run from the repository root.
 
 **2. Render (API).** Create a Blueprint from [`render.yaml`](render.yaml): a free Node web service in Singapore that runs `npm ci --include=dev && npm run build -w server`, starts with `npm run start -w server`, checks health at `/api/health` and deploys from `main`. It presets `NODE_ENV=production`, Node 24, `ENCRYPTION_REQUIRED=true`, `TRUST_PROXY=2`, `SEED_ON_BOOT=true` and `DEMO_MODE=true`, and asks for the secrets:
 
-| Variable                                    | Value                                                    |
-| ------------------------------------------- | -------------------------------------------------------- |
-| `MONGODB_URI`                               | The Atlas connection string                              |
-| `JWT_ACCESS_SECRET`                         | From your local `server/.env` after `npm run gen:keys`   |
-| `PAYLOAD_PRIVATE_KEY`, `PAYLOAD_PUBLIC_KEY` | From your local `server/.env`                            |
-| `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`    | Razorpay Dashboard → Test Mode → API Keys                |
-| `CLIENT_ORIGINS`                            | The Vercel site URL, e.g. `https://planpilot.vercel.app` |
+| Variable                                    | Value                                                              |
+| ------------------------------------------- | ------------------------------------------------------------------ |
+| `MONGODB_URI`                               | The Atlas connection string                                        |
+| `JWT_ACCESS_SECRET`                         | From your local `server/.env` after `npm run gen:keys`             |
+| `PAYLOAD_PRIVATE_KEY`, `PAYLOAD_PUBLIC_KEY` | From your local `server/.env`                                      |
+| `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`    | Razorpay Dashboard → Test Mode → API Keys                          |
+| `CLIENT_ORIGINS`                            | The Vercel site URL, e.g. `https://planpilot-dashboard.vercel.app` |
 
 **3. Vercel (web app).** Import the repository and keep the root directory at the repository root. [`vercel.json`](vercel.json) sets the install command (`npm ci`), the build (`npm run build -w client`) and the output (`client/dist`), and adds:
 
@@ -511,9 +511,9 @@ Run from the repository root.
 Set `VITE_SITE_URL` (the Vercel URL), `VITE_PAYLOAD_PUBLIC_KEY` (same as the server's `PAYLOAD_PUBLIC_KEY`) and `VITE_PAYLOAD_KID` (`k1`) in Project Settings → Environment Variables.
 
 > [!IMPORTANT]
-> The rewrite in `vercel.json` points at `https://planpilot-api.onrender.com`. If your Render service gets a different hostname, update it there.
+> The rewrite in `vercel.json` points at `https://planpilot-api-0i0d.onrender.com`. If your Render service gets a different hostname, update it there.
 
-**4. Keep-warm.** [`keep-warm.yml`](.github/workflows/keep-warm.yml) pings the health endpoint every 14 minutes from about 07:30 to 23:30 IST so reviewers rarely hit a cold start. Enable it by setting the repository variable `API_HEALTH_URL` (Settings → Secrets and variables → Actions → Variables) to the Render health URL, e.g. `https://planpilot-api.onrender.com/api/health`.
+**4. Keep-warm.** [`keep-warm.yml`](.github/workflows/keep-warm.yml) pings the health endpoint every 14 minutes from about 07:30 to 23:30 IST so reviewers rarely hit a cold start. Enable it by setting the repository variable `API_HEALTH_URL` (Settings → Secrets and variables → Actions → Variables) to the Render health URL, e.g. `https://planpilot-api-0i0d.onrender.com/api/health`.
 
 **Demo data over time.** The demo story is relative to when it was seeded (Kavya's plan ends two days after seeding, for example). To rebuild it, sign in as the admin and use **Reset demo data** in the admin sidebar (it works while `DEMO_MODE=true`), or run `npm run seed -- --fresh` locally with `MONGODB_URI` pointing at Atlas.
 
