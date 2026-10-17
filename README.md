@@ -167,7 +167,6 @@ Every item in the brief, and where to find it.
 - **Loading and error states.** Branded splash and loader, skeleton placeholders, a route progress bar, an offline banner, a "waking up the server" banner for cold starts, empty states with a next step, and branded 404, 403 and 500 pages.
 - **Accessibility.** WCAG AA colour contrast in both themes, skip-to-content links, visible labels with field-level errors, keyboard-friendly menus and dialogs built on Radix primitives, 44 px touch targets on phones, reduced-motion support, and axe scans in light and dark in the E2E suite.
 - **SEO and link previews.** Static Open Graph and Twitter tags with a 1200 × 630 share image, JSON-LD for the app and its four INR plans, per-page titles, `robots.txt` and `sitemap.xml` written at build time, and a web manifest with icons. The logo, icons and share image are rendered from one HTML source by [generate-brand-assets.mjs](scripts/generate-brand-assets.mjs).
-- **Developer credit.** Every page ends with a footer (pricing, API documentation and source code links) and a "Designed & developed by" card with the developer's portfolio, GitHub, LinkedIn and email; the sign-in pages show the same card. It stacks into a single column on phones.
 - **CSP and security headers** on both the web app and the API. [Details](#security)
 - **Tests and CI.** 230 unit and integration tests with coverage gates, 59 Playwright end-to-end tests with axe, Git hooks and a GitHub Actions pipeline. [Details](#testing)
 
@@ -511,8 +510,6 @@ Run from the repository root.
 - an SPA fallback to `index.html`, the CSP and security headers, and long-lived caching for hashed assets.
 
 Set `VITE_SITE_URL` (the Vercel URL), `VITE_PAYLOAD_PUBLIC_KEY` (same as the server's `PAYLOAD_PUBLIC_KEY`) and `VITE_PAYLOAD_KID` (`k1`) in Project Settings → Environment Variables.
-
-The live site is **https://planpilot-dashboard.vercel.app**. Vercel's generated address, `planpilot-lemon.vercel.app`, redirects to it permanently (a host-based redirect in `vercel.json`), so there is one canonical URL for links, Open Graph tags and cookies.
 
 > [!IMPORTANT]
 > The rewrite in `vercel.json` points at `https://planpilot-api-0i0d.onrender.com`. If your Render service gets a different hostname, update it there.
