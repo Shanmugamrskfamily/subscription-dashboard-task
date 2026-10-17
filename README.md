@@ -28,7 +28,7 @@ A full-stack subscription management dashboard. Customers pick a plan, pay throu
   &nbsp;·&nbsp;
   <!-- LIVE_URL --><a href="https://planpilot-api-0i0d.onrender.com/api/docs"><b>API docs</b></a>
   &nbsp;·&nbsp;
-  <!-- DEMO_VIDEO_URL --><a href="#see-it-in-action"><b>Demo video</b></a>
+  <a href="#see-it-in-action"><b>Demo GIF</b></a>
 </p>
 
 <sub>Built by <b>Shanmugam R</b> as the technical assessment for the Full Stack Web Developer role at Gnxtace Technologies.</sub>
